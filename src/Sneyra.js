@@ -20,7 +20,7 @@ class Sneyra extends Client {
 		this.lavalink = null;
 		this.once('ready', () => {
 			this.lavalink = new LavalinkPlayer(this,
-				[{ host: 'localhost', port: lavalink.PORT_WS, region: 'eu', password: lavalink.AUTHORIZATION }],
+				[{ host: 'localhost', port: lavalink.PORT_WS, region: 'eu-central', password: lavalink.AUTHORIZATION }],
 				{ user: this.user.id, shards: 0 }
 			);
 		});

@@ -112,7 +112,7 @@ class MusicManager {
 		return this.client.lavalink.join({
 			guild: this.guild.id,
 			channel: voiceChannel.id,
-			host: 'eu-central'
+			host: 'localhost'
 		}, { selfdeaf: true });
 	}
 
