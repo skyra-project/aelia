@@ -1,4 +1,4 @@
-const { MusicCommand, util: { showSeconds } } = require('../../index');
+const { MusicCommand } = require('../../index');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends MusicCommand {
@@ -14,10 +14,10 @@ module.exports = class extends MusicCommand {
 		const [song] = queue;
 		return msg.sendMessage(new MessageEmbed()
 			.setColor(12916736)
-			.setTitle(song.info.title)
-			.setURL(song.info.uri)
-			.setAuthor(song.info.author || 'Unknown')
-			.setDescription(`**Duration**: ${showSeconds(song.info.length)}`)
+			.setTitle(song.title)
+			.setURL(song.url)
+			.setAuthor(song.author)
+			.setDescription(`**Duration**: ${song.friendlyDuration}`)
 			.setTimestamp());
 	}
 

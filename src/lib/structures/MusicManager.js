@@ -1,14 +1,6 @@
-class MusicManager {
+const Song = require('./Song');
 
-	/**
-	 * @typedef {Object} MusicManagerSong
-	 * @property {string} url The video id
-	 * @property {string} title The title of the video
-	 * @property {KlasaUser | string} user The user that requested this song
-	 * @property {number} loudness The loudness for this song, reserved for future
-	 * @property {number} seconds The seconds this video lasts
-	 * @property {boolean} opus Whether this video has an Opus stream available or not
-	 */
+class MusicManager {
 
 	constructor(guild) {
 		/**
@@ -30,7 +22,7 @@ class MusicManager {
 		/**
 		 * The current queue for this manager
 		 * @since 1.0.0
-		 * @type {MusicManagerSong[]}
+		 * @type {Song[]}
 		 */
 		this.queue = [];
 
@@ -46,6 +38,13 @@ class MusicManager {
 		this.paused = false;
 
 		this.volume = 100;
+	}
+
+	get remaining() {
+		if (!this.queue.length) return -1;
+		const { player } = this;
+		if (!player) return -1;
+		return this.queue[0].duration - player.state.position;
 	}
 
 	/**
@@ -95,11 +94,23 @@ class MusicManager {
 	 * @since 1.0.0
 	 * @param {KlasaUser} user The user that requests this song
 	 * @param {Object<string, *>} song The url to add
-	 * @returns {MusicManagerSong}
+	 * @returns {this}
 	 */
 	add(user, song) {
-		this.queue.push({ requester: user, ...song });
+		this.queue.push(new Song(song, user));
 		return song;
+	}
+
+	/**
+	 * Seek to a position of a song
+	 * @since 3.0.0
+	 * @param {number} position The new position in milliseconds to seek
+	 * @returns {this}
+	 */
+	seek(position) {
+		const { player } = this;
+		if (player) player.seek(position);
+		return this;
 	}
 
 	/**

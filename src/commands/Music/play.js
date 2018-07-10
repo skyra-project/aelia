@@ -29,7 +29,7 @@ module.exports = class extends MusicCommand {
 	async play(music) {
 		while (music.queue.length) {
 			const [song] = music.queue;
-			await music.channel.send(`🎧 Playing: **${song.info.title}** as requested by: **${song.requester}**`);
+			await music.channel.send(`🎧 Playing: **${song.title}** as requested by: **${song.requester}**`);
 			await sleep(250);
 
 			try {

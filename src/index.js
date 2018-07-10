@@ -8,6 +8,8 @@ module.exports = {
 	// Lib/structures
 	MusicCommand: require('./lib/structures/MusicCommand'),
 	MusicManager: require('./lib/structures/MusicManager'),
+	Song: require('./lib/structures/Song'),
+	LavalinkManager: require('./lib/structures/LavalinkManager'),
 
 	util: require('./lib/util/util'),
 
