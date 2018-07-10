@@ -8,7 +8,7 @@ module.exports = class extends Argument {
 
 		arg = arg.replace(/<(.+)>/g, '$1');
 		if (this.isLink(arg))
-			return (await this.client.lavalink.resolveTracks(arg))[0];
+			return this.client.lavalink.resolveTracks(arg);
 
 		const searchSoundcloud = 'sc' in msg.flags || 'soundcloud' in msg.flags;
 
