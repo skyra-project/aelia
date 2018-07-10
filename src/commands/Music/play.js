@@ -21,6 +21,7 @@ module.exports = class extends MusicCommand {
 			return msg.sendMessage(`There was a track going on! Playing it back! Now playing: ${music.queue[0].title}!`);
 		} else {
 			music.channel = msg.channel;
+			music.playing = true;
 			return this.play(music);
 		}
 	}
@@ -52,7 +53,7 @@ module.exports = class extends MusicCommand {
 				// Autofetch if the autoplayer is enabled
 				// if (!music.queue.length && music.autoplay) await this.autoPlayer(music);
 			} catch (error) {
-				this.client.emit('error', error);
+				if (typeof error !== 'string') this.client.emit('error', error);
 				music.channel.send(error);
 				music.leave();
 				break;

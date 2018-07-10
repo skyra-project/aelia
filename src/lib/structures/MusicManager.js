@@ -135,11 +135,10 @@ class MusicManager {
 		const { player } = this;
 		if (!player) throw 'This dj table isn\'t connected!';
 
-
 		const [song] = this.queue;
 		player.play(song.track);
 		this.playing = true;
-		return this.player;
+		return player;
 	}
 
 	pause() {
