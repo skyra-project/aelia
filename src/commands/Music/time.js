@@ -3,7 +3,7 @@ const { MusicCommand, util: { showSeconds } } = require('../../index');
 module.exports = class extends MusicCommand {
 
 	constructor(...args) {
-		super(...args, { description: 'Check how much time is left for the song to end.' });
+		super(...args, { description: 'Check how much time is left for the song to end.', enabled: false });
 	}
 
 	async run(msg) {

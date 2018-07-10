@@ -1,10 +1,10 @@
 {
   "name": "sneyra",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Extension of Skyra - Music-only bot.",
   "main": "src/Sneyra.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint src"
   },
   "author": "kyraNET",
   "license": "MIT",
@@ -14,11 +14,10 @@
     "fs-nextra": "^0.3.5",
     "klasa": "github:dirigeants/klasa",
     "node-opus": "^0.3.0",
-    "rethinkdbdash": "^2.3.31",
-    "ytdl-core": "^0.20.4"
+    "node-fetch": "^2.1.2"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
+    "eslint": "^5.1.0",
     "eslint-config-klasa": "github:dirigeants/klasa-lint"
   }
 }

@@ -5,7 +5,6 @@ module.exports = class extends MusicCommand {
 	constructor(...args) {
 		super(...args, {
 			// Disabled until Krypton lands stable
-			enabled: false,
 			aliases: ['vol'],
 			usage: '[control:string]',
 			description: 'Manage the volume for current song.',
@@ -23,20 +22,21 @@ module.exports = class extends MusicCommand {
 	}
 
 	async run(msg, [vol]) {
-		const { dispatcher, playing } = msg.guild.music;
+		const { music } = msg.guild;
+		const { playing, volume } = music;
 		if (!playing) throw `The party isn't going on! One shouldn't touch the volume wheel without a song first!`;
 
-		if (!vol) return msg.sendMessage(`📢 Volume: ${Math.round(dispatcher.volume * 50)}%`);
+		if (!vol) return msg.sendMessage(`📢 Volume: ${volume}%`);
 		if (/^[+]+$/.test(vol)) {
-			if (Math.round(dispatcher.volume * 50) >= 100) return msg.sendMessage(`📢 Volume: ${Math.round(dispatcher.volume * 50)}%`);
-			dispatcher.setVolume(Math.min(((dispatcher.volume * 50) + (2 * (vol.split('+').length - 1))) / 50, 2));
-			return msg.sendMessage(`${dispatcher.volume === 2 ? '📢' : '🔊'} Volume: ${Math.round(dispatcher.volume * 50)}%`);
+			if (volume >= 100) return msg.sendMessage(`📢 Volume: ${volume}%`);
+			music.player.volume(Math.min(volume + (2 * (vol.split('+').length - 1)), 200));
+			return msg.sendMessage(`${volume === 200 ? '📢' : '🔊'} Volume: ${volume}%`);
 		}
 
 		if (/^[-]+$/.test(vol)) {
-			if (Math.round(dispatcher.volume * 50) <= 0) return msg.sendMessage(`🔇 Volume: ${Math.round(dispatcher.volume * 50)}%`);
-			dispatcher.setVolume(Math.max(((dispatcher.volume * 50) - (2 * (vol.split('-').length - 1))) / 50, 0));
-			return msg.sendMessage(`${dispatcher.volume === 0 ? '🔇' : '🔉'} Volume: ${Math.round(dispatcher.volume * 50)}%`);
+			if (volume <= 0) return msg.sendMessage(`🔇 Volume: ${(volume)}%`);
+			music.player.volume(Math.max(volume - (2 * (vol.split('-').length - 1)), 0));
+			return msg.sendMessage(`${volume === 0 ? '🔇' : '🔉'} Volume: ${volume}%`);
 		}
 
 		throw `This command is quite analogic, but let me show you how you use this command:${codeBlock('', this.extendedHelp)}`;

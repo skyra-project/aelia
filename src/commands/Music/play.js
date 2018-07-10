@@ -28,17 +28,17 @@ module.exports = class extends MusicCommand {
 	async play(music) {
 		while (music.queue.length) {
 			const [song] = music.queue;
-			await music.channel.send(`🎧 Playing: **${song.title}** as requested by: **${song.requester}**`);
-			await sleep(300);
+			await music.channel.send(`🎧 Playing: **${song.info.title}** as requested by: **${song.requester}**`);
+			await sleep(250);
 
 			try {
 				if (!await new Promise(async (resolve) => {
 					(await music.play())
-						.on('end', () => {
+						.once('end', () => {
 							music.skip();
 							resolve(true);
 						})
-						.on('error', (err) => {
+						.once('error', (err) => {
 							music.channel.send('Whoops! This disk broke!');
 							music.client.emit('error', err);
 							music.skip();
@@ -50,7 +50,7 @@ module.exports = class extends MusicCommand {
 				})) return;
 
 				// Autofetch if the autoplayer is enabled
-				if (!music.queue.length && music.autoplay) await this.autoPlayer(music);
+				// if (!music.queue.length && music.autoplay) await this.autoPlayer(music);
 			} catch (error) {
 				this.client.emit('error', error);
 				music.channel.send(error);
@@ -60,13 +60,13 @@ module.exports = class extends MusicCommand {
 		}
 
 		if (!music.queue.length) {
-			music.channel.send('⏹ From 1 to 10, being 1 the worst score and 10 the best, how would you rate the session? It just ended!')
-				.then(() => music.leave());
+			await music.channel.send('⏹ From 1 to 10, being 1 the worst score and 10 the best, how would you rate the session? It just ended!');
+			music.leave();
 		}
 	}
 
-	autoPlayer(music) {
-		return music.add('YouTube AutoPlay', music.next);
-	}
+	// autoPlayer(music) {
+	// 	return music.add('YouTube AutoPlay', music.next);
+	// }
 
 };

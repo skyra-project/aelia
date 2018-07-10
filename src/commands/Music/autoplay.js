@@ -4,6 +4,7 @@ module.exports = class extends MusicCommand {
 
 	constructor(...args) {
 		super(...args, {
+			enabled: false,
 			description: 'Toggle the autoplayer.',
 			extendedHelp: [
 				'NOTE! This command does not make Sneyra play a song from the nowhere, it tells her whether to play the first',

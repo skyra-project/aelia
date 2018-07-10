@@ -1,5 +1,6 @@
 const { Client } = require('klasa');
-const config = require('../config.js');
+const LavalinkPlayer = require('./lib/structures/LavalinkManager');
+const { tokens, lavalink } = require('../config.js');
 
 // Load custom structures
 require('./lib/extensions/SneyraGuild');
@@ -9,9 +10,25 @@ Client.defaultPermissionLevels
 	.add(5, (client, msg) => msg.member && msg.guild.configs.dj && msg.member.roles.has(msg.guild.configs.dj), { fetch: true })
 	.add(6, (client, msg) => msg.member
         && ((msg.guild.configs.administrator && msg.member.roles.has(msg.guild.configs.administrator))
-            || msg.member.permissions.has('MANAGE_GUILD')), { fetch: true });
+			|| msg.member.permissions.has('MANAGE_GUILD')), { fetch: true });
 
-new Client({
+class Sneyra extends Client {
+
+	constructor(...options) {
+		super(...options);
+
+		this.lavalink = null;
+		this.once('ready', () => {
+			this.lavalink = new LavalinkPlayer(this,
+				[{ host: 'localhost', port: 80, region: 'eu', password: lavalink.AUTHORIZATION }],
+				{ user: this.user.id, shards: 0 }
+			);
+		});
+	}
+
+}
+
+new Sneyra({
 	disabledEvents: [
 		'GUILD_BAN_ADD',
 		'GUILD_BAN_REMOVE',
@@ -32,4 +49,4 @@ new Client({
 	prefix: 'm!',
 	presence: { activity: { name: 'Sneyra, help', type: 'LISTENING' } },
 	regexPrefix: /^(hey )?sneyra(,|!)/i
-}).login(config.tokens.development);
+}).login(tokens.development);
