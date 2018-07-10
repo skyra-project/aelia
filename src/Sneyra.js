@@ -32,4 +32,4 @@ new Client({
 	prefix: 'm!',
 	presence: { activity: { name: 'Sneyra, help', type: 'LISTENING' } },
 	regexPrefix: /^(hey )?sneyra(,|!)/i
-}).login(config.token);
+}).login(config.tokens.development);
