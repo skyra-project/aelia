@@ -10,7 +10,7 @@ class LavalinkClient extends PlayerManager {
      * @returns {Promise<?Array<Object>>}
      */
 	async resolveTracks(search) {
-		const url = new URL(`http://${BASE_URL}:${PORT_REST}`);
+		const url = new URL(`http://${BASE_URL}:${PORT_REST}/loadtracks`);
 		url.search = new URLSearchParams([['identifier', search]]);
 
 		const result = await fetch(url, { headers: { Authorization: AUTHORIZATION } });
