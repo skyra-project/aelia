@@ -12,7 +12,7 @@ module.exports = class extends MusicCommand {
 	async run(msg, [songs]) {
 		if (Array.isArray(songs)) {
 			for (const song of songs) msg.guild.music.add(msg.author, song);
-			return msg.sendMessage(`🎵 Added **${songs.length}** to the queue 🎶`);
+			return msg.sendMessage(`🎵 Added **${songs.length}** songs to the queue 🎶`);
 		}
 		return msg.sendMessage(`🎵 Added **${songs.info.title}** to the queue 🎶`);
 	}
