@@ -10,7 +10,7 @@ module.exports = class extends MusicCommand {
 	}
 
 	async run(msg, [song]) {
-		msg.guild.add(msg.author, song);
+		msg.guild.music.add(msg.author, song);
 		return msg.sendMessage(`🎵 Added **${song.info.title}** to the queue 🎶`);
 	}
 
