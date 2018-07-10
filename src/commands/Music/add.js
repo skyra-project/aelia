@@ -14,6 +14,7 @@ module.exports = class extends MusicCommand {
 			for (const song of songs) msg.guild.music.add(msg.author, song);
 			return msg.sendMessage(`🎵 Added **${songs.length}** songs to the queue 🎶`);
 		}
+		msg.guild.music.add(msg.author, songs);
 		return msg.sendMessage(`🎵 Added **${songs.info.title}** to the queue 🎶`);
 	}
 
