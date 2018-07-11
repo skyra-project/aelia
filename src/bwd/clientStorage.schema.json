@@ -15,6 +15,14 @@
 		"array": true,
 		"configurable": true
 	},
+	"guildWhitelist": {
+		"type": "string",
+		"default": [],
+		"min": 17,
+		"max": 19,
+		"array": true,
+		"configurable": true
+	},
 	"userWhitelist": {
 		"type": "user",
 		"default": [],
