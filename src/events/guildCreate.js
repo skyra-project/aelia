@@ -34,7 +34,7 @@ module.exports = class extends Event {
 			].join('\n')).catch(() => null);
 		}
 
-		return null;
+		return guild.leave();
 	}
 
 	log(guild) {
