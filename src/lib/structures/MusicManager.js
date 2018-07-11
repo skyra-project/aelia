@@ -163,7 +163,7 @@ class MusicManager {
 	resume() {
 		const { player } = this;
 		if (!player) return null;
-		player.resume();
+		player.pause(false);
 		this.paused = false;
 		return this;
 	}

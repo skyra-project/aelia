@@ -6,7 +6,6 @@
 		"default": null,
 		"min": null,
 		"max": null,
-		"sql": "TEXT",
 		"configurable": true
 	},
 	"disabledCommands": {
@@ -15,7 +14,6 @@
 		"default": [],
 		"min": null,
 		"max": null,
-		"sql": "TEXT DEFAULT '[]'",
 		"configurable": true
 	},
 	"dj": {
@@ -24,7 +22,6 @@
 		"default": null,
 		"min": null,
 		"max": null,
-		"sql": "TEXT",
 		"configurable": true
 	},
 	"language": {
@@ -33,7 +30,6 @@
 		"default": "en-US",
 		"min": null,
 		"max": null,
-		"sql": "VARCHAR(5) NOT NULL DEFAULT 'en-US'",
 		"configurable": true
 	},
 	"prefix": {
@@ -42,19 +38,6 @@
 		"default": "m!",
 		"min": 1,
 		"max": 10,
-		"sql": "VARCHAR(10) NOT NULL DEFAULT 'm!'",
 		"configurable": true
-	},
-	"management": {
-		"type": "Folder",
-		"embedReply": {
-			"type": "boolean",
-			"array": false,
-			"default": false,
-			"min": null,
-			"max": null,
-			"sql": "TEXT DEFAULT false",
-			"configurable": true
-		}
 	}
 }

@@ -229,7 +229,7 @@ discord.js-lavalink@^2.0.2:
 
 "discord.js@github:discordjs/discord.js":
   version "12.0.0-dev"
-  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/526832058e78de8d8936e8db61b60775a0bcf3a5"
+  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/f67d682223a0b0d330ec34738a3dfe51a50f3d8f"
   dependencies:
     form-data "^2.3.2"
     node-fetch "^2.1.2"
