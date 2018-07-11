@@ -5,6 +5,8 @@ const NOTICE = new Colors({ text: 'lightyellow' }).format('[GUILD JOIN]');
 module.exports = class extends Event {
 
 	async run(guild) {
+		if (!guild.available) return null;
+
 		// Emit the log to the console
 		this.log(guild);
 
