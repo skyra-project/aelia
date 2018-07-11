@@ -38,5 +38,13 @@
 		"max": null,
 		"array": true,
 		"configurable": true
+	},
+	"userAlertedList": {
+		"type": "user",
+		"default": [],
+		"min": null,
+		"max": null,
+		"array": true,
+		"configurable": true
 	}
 }
