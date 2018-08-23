@@ -11,9 +11,10 @@ module.exports = class extends Inhibitor {
 
 		if (msg.channel.type !== 'text') throw 'This command may be only executed in a server.';
 
-		if (!msg.member.voiceChannel) throw 'You are not connected in a voice channel.';
-		if (!msg.guild.me.voiceChannel) throw 'I am not connected in a voice channel.';
-		if (msg.member.voiceChannel !== msg.guild.me.voiceChannel) throw 'You must be in the same voice channel as me.';
+		const [memberChannel, sneyraChannel] = [msg.member.voice.channelID, msg.guild.me.voice.channelID];
+		if (!memberChannel) throw 'You are not connected in a voice channel.';
+		if (!sneyraChannel) throw 'I am not connected in a voice channel.';
+		if (memberChannel !== sneyraChannel) throw 'You must be in the same voice channel as me.';
 	}
 
 };

@@ -54,7 +54,7 @@ class MusicManager {
 	 * @readonly
 	 */
 	get voiceChannel() {
-		return this.guild.me.voiceChannel;
+		return this.guild.me.voice.channel;
 	}
 
 	/**
