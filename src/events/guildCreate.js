@@ -14,17 +14,17 @@ module.exports = class extends Event {
 		if (guild.ownerID === this.client.options.clientID) return null;
 
 		// Check whether the guild or the guild owner are whitelisted or blacklisted
-		const { configs } = this.client;
-		if (configs.guildBlacklist.includes(guild.id)
-			|| configs.userBlacklist.includes(guild.ownerID)) return guild.leave();
-		if (configs.guildWhitelist.includes(guild.id)
-			|| configs.userWhitelist.includes(guild.ownerID)) return null;
+		const { settings } = this.client;
+		if (settings.guildBlacklist.includes(guild.id)
+			|| settings.userBlacklist.includes(guild.ownerID)) return guild.leave();
+		if (settings.guildWhitelist.includes(guild.id)
+			|| settings.userWhitelist.includes(guild.ownerID)) return null;
 
 		const member = await guild.members.fetch(guild.ownerID).catch(() => null);
 		if (!member) return guild.leave();
 
-		if (configs.userAlertedList.includes(member.id)) {
-			await configs.update('userAlertedList', member.user);
+		if (settings.userAlertedList.includes(member.id)) {
+			await settings.update('userAlertedList', member.user);
 			// Send notice to the owner
 			await member.user.send([
 				`Hello ${member.user.username}! I am glad you want me in your server, however, my services are not free.`,

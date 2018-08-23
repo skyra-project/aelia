@@ -5,11 +5,21 @@ const { tokens, lavalink } = require('../config.js');
 // Load custom structures
 require('./lib/extensions/SneyraGuild');
 
+Client.defaultClientSchema
+	.add('guildWhitelist', 'string', { array: true, min: 17, max: 19 })
+	.add('userWhitelist', 'User', { array: true })
+	.add('userBlacklist', 'User', { array: true })
+	.add('userAlertedList', 'User', { array: true });
+
+Client.defaultGuildSchema
+	.add('administrator', 'Role')
+	.add('dj', 'Role');
+
 // Modify the permission levels
 Client.defaultPermissionLevels
-	.add(5, (client, msg) => msg.member && msg.guild.configs.dj && msg.member.roles.has(msg.guild.configs.dj), { fetch: true })
+	.add(5, (client, msg) => msg.member && msg.guild.settings.dj && msg.member.roles.has(msg.guild.settings.dj), { fetch: true })
 	.add(6, (client, msg) => msg.member
-        && ((msg.guild.configs.administrator && msg.member.roles.has(msg.guild.configs.administrator))
+        && ((msg.guild.settings.administrator && msg.member.roles.has(msg.guild.settings.administrator))
 			|| msg.member.permissions.has('MANAGE_GUILD')), { fetch: true });
 
 class Sneyra extends Client {
