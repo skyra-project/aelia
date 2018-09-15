@@ -93,7 +93,7 @@ class MusicManager {
 	 * Add a song to the queue
 	 * @since 1.0.0
 	 * @param {KlasaUser} user The user that requests this song
-	 * @param {Object<string, *>} song The url to add
+	 * @param {SongData} song The url to add
 	 * @returns {this}
 	 */
 	add(user, song) {

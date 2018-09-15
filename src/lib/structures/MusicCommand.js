@@ -4,7 +4,7 @@ class MusicCommand extends Command {
 
 	constructor(client, store, file, core, { requireMusic = false, ...options }) {
 		// By nature, music commands only run in VoiceChannels, which are in Guilds.
-		if ('runIn' in options) options.runIn = ['text'];
+		if (!('runIn' in options)) options.runIn = ['text'];
 
 		super(client, store, file, core, options);
 

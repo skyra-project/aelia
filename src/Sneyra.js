@@ -1,62 +1,35 @@
-const { Client } = require('klasa');
-const LavalinkPlayer = require('./lib/structures/LavalinkManager');
-const { tokens, lavalink } = require('../config.js');
+const Sneyra = require('./lib/Sneyra');
+const { tokens, version } = require('../config.js');
 
-// Load custom structures
-require('./lib/extensions/SneyraGuild');
+// eslint-disable-next-line no-process-env
+const DEV = 'DEV' in process.env ? process.env.DEV === 'true' : !('PM2_HOME' in process.env);
 
-Client.defaultClientSchema
-	.add('guildWhitelist', 'string', { array: true, min: 17, max: 19 })
-	.add('userWhitelist', 'User', { array: true })
-	.add('userBlacklist', 'User', { array: true })
-	.add('userAlertedList', 'User', { array: true });
-
-Client.defaultGuildSchema
-	.add('administrator', 'Role')
-	.add('dj', 'Role');
-
-// Modify the permission levels
-Client.defaultPermissionLevels
-	.add(5, (client, msg) => msg.member && msg.guild.settings.dj && msg.member.roles.has(msg.guild.settings.dj), { fetch: true })
-	.add(6, (client, msg) => msg.member
-        && ((msg.guild.settings.administrator && msg.member.roles.has(msg.guild.settings.administrator))
-			|| msg.member.permissions.has('MANAGE_GUILD')), { fetch: true });
-
-class Sneyra extends Client {
-
-	constructor(...options) {
-		super(...options);
-
-		this.lavalink = null;
-		this.once('ready', () => {
-			this.lavalink = new LavalinkPlayer(this,
-				[{ host: 'localhost', port: lavalink.PORT_WS, region: 'eu-central', password: lavalink.AUTHORIZATION }],
-				{ user: this.user.id, shards: 1 }
-			);
-		});
-	}
-
-}
-
-new Sneyra({
+const sneyra = new Sneyra({
+	commandEditing: true,
+	console: { useColor: true, utc: true },
+	consoleEvents: { verbose: true },
+	dev: DEV,
 	disabledEvents: [
 		'GUILD_BAN_ADD',
 		'GUILD_BAN_REMOVE',
 		'TYPING_START',
-		'RELATIONSHIP_ADD',
-		'RELATIONSHIP_REMOVE',
 		'CHANNEL_PINS_UPDATE',
 		'PRESENCE_UPDATE',
 		'USER_UPDATE',
-		'USER_NOTE_UPDATE',
 		'MESSAGE_REACTION_ADD',
 		'MESSAGE_REACTION_REMOVE',
 		'MESSAGE_REACTION_REMOVE_ALL'
 	],
-	commandEditing: true,
-	console: { useColor: true, utc: true },
 	pieceDefaults: { commands: { deletable: true, promptLimit: 5, quotedStringSupport: true } },
 	prefix: 'm!',
 	presence: { activity: { name: 'Sneyra, help', type: 'LISTENING' } },
-	regexPrefix: /^(hey )?sneyra(,|!)/i
-}).login(tokens.development);
+	readyMessage: (client) =>
+		`Sneyra ${version} ready! [${client.user.tag}] [ ${client.guilds.size} [G]] [ ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()} [U]].`,
+	regexPrefix: /^(hey )?sneyra(,|!)/i,
+	restTimeOffset: 0,
+	slowmode: 500,
+	slowmodeAggressive: true
+});
+
+sneyra.login(DEV ? tokens.development : tokens.production)
+	.catch((error) => sneyra.console.wtf(`Login Error:\n${(error && error.stack) || error}`));
