@@ -19,7 +19,7 @@ module.exports = class extends MusicCommand {
 		if (queue.length > 10) output.push(`\nShowing 10 songs of ${queue.length}`);
 		// else if (autoplay) output.push(`\n**AutoPlay**: <${next}>`);
 
-		return msg.sendMessage(output.join('\n'));
+		return msg.sendMessage(output.length > 0 ? output.join('\n') : 'The queue is empty! You can add some songs using `Sneyra, add`.');
 	}
 
 };
