@@ -10,15 +10,13 @@ export default class extends MusicCommand {
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
 			description: 'Skip the current song.',
-			requireMusic: true,
+			music: ['QUEUE_NOT_EMPTY'],
 			usage: '[force]'
 		});
 	}
 
 	public async run(message: AeliaMessage, [force = false]: [boolean]): Promise<AeliaMessage> {
 		const { music } = message.guild;
-
-		if (!music.queue.length) throw `Uh... I don't know what should I skip, the queue's empty.`;
 
 		if (music.voiceChannel.members.size > 4) {
 			if (force) {

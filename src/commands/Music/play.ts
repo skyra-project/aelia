@@ -10,6 +10,7 @@ export default class extends MusicCommand {
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
 			description: 'Let\'s start the queue!',
+			music: ['USER_VOICE_CHANNEL'],
 			usage: '(song:song)'
 		});
 
@@ -37,7 +38,7 @@ export default class extends MusicCommand {
 		if (music.playing) {
 			await message.sendMessage('Hey! The disk is already spinning!');
 		} else if (music.paused) {
-			music.resume();
+			await music.resume();
 			await message.sendMessage(`There was a track going on! Playing it back! Now playing: ${music.queue[0].title}!`);
 		} else {
 			music.channel = message.channel as KlasaTextChannel;
@@ -52,18 +53,18 @@ export default class extends MusicCommand {
 			await util.sleep(250);
 
 			try {
-				await new Promise(music.play.bind(music));
+				await music.play();
 			} catch (error) {
 				if (typeof error !== 'string') this.client.emit('error', error);
-				music.channel.send(error);
-				music.leave();
+				await music.channel.send(error);
+				await music.leave();
 				break;
 			}
 		}
 
 		if (!music.queue.length) {
 			await music.channel.send('⏹ From 1 to 10, being 1 the worst score and 10 the best, how would you rate the session? It just ended!');
-			music.leave();
+			await music.leave().catch((error) => { this.client.emit('wtf', error); });
 		}
 	}
 

@@ -7,18 +7,15 @@ export default class extends MusicCommand {
 
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
-			// Disabled until Krypton lands stable
 			aliases: ['vol'],
 			description: 'Manage the volume for current song.',
-			requireMusic: true,
+			music: ['SAME_VOICE_CHANNEL', 'VOICE_PLAYING'],
 			usage: '[volume:number]'
 		});
 	}
 
 	public async run(message: AeliaMessage, [volume]: [number]): Promise<AeliaMessage> {
 		const { music } = message.guild;
-		if (!music.playing) throw `The party isn't going on! One shouldn't touch the volume wheel without a song first!`;
-
 		const previousVolume = music.volume;
 
 		// If no argument was given

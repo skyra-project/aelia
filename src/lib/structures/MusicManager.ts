@@ -257,33 +257,35 @@ export class MusicManager {
 	/**
 	 * Play the queue
 	 */
-	public async play(resolve: Function, reject: Function): Promise<this> {
-		if (!this.voiceChannel) throw 'Where am I supposed to play the music? I am not in a voice channel!';
-		if (!this.queue.length) throw 'No songs left in the queue!';
-		if (this.playing) throw `Decks' spinning, can't you hear it?`;
+	public play(): Promise<this> {
+		if (!this.voiceChannel) return Promise.reject('Where am I supposed to play the music? I am not in a voice channel!');
+		if (!this.queue.length) return Promise.reject('No songs left in the queue!');
+		if (this.playing) return Promise.reject(`Decks' spinning, can't you hear it?`);
 
-		// Setup the events
-		if (this._listeners.end) this._listeners.end(true);
-		this._listeners.end = (finish: boolean) => {
-			this._listeners.end = null;
-			this._listeners.disconnect = null;
-			this._listeners.error = null;
-			if (finish) resolve();
-		};
-		this._listeners.error = (error) => {
-			this._listeners.end(false);
-			reject(error);
-		};
-		this._listeners.disconnect = (code) => {
-			this._listeners.end(false);
-			if (code >= 4000) reject('I got disconnected forcefully!');
-			else resolve();
-		};
-		this.times.paused = 0;
-		this.times.resumed = Date.now();
+		return new Promise((resolve, reject) => {
+			// Setup the events
+			if (this._listeners.end) this._listeners.end(true);
+			this._listeners.end = (finish: boolean) => {
+				this._listeners.end = null;
+				this._listeners.disconnect = null;
+				this._listeners.error = null;
+				if (finish) resolve();
+			};
+			this._listeners.error = (error) => {
+				this._listeners.end(false);
+				reject(error);
+			};
+			this._listeners.disconnect = (code) => {
+				this._listeners.end(false);
+				if (code >= 4000) reject('I got disconnected forcefully!');
+				else resolve();
+			};
+			this.times.paused = 0;
+			this.times.resumed = Date.now();
 
-		await this.player.play(this.queue[0].track);
-		return this;
+			this.player.play(this.queue[0].track)
+				.catch(reject);
+		});
 	}
 
 	/**
@@ -354,7 +356,7 @@ export class MusicManager {
 		if (isTrackStuckEvent(payload)) {
 			if (this.channel && payload.thresholdMs > 1000) {
 				this.channel.send(`Hold on, I got a little problem, I'll be back in ${Math.ceil(payload.thresholdMs / 1000)} seconds!`)
-					.then((message: KlasaMessage) => { message.delete({ timeout: payload.thresholdMs }); })
+					.then((message: KlasaMessage) => message.delete({ timeout: payload.thresholdMs }))
 					.catch((error) => { this.client.emit('wtf', error); });
 			}
 			return;
@@ -365,7 +367,7 @@ export class MusicManager {
 			if (payload.code >= 4000) {
 				this.client.emit('error', `[LL:${this.guild.id}] Disconnection with code ${payload.code}: ${payload.reason}`);
 				this.channel.send(`Whoops, looks like I got a little problem with Discord!`)
-					.then((message: KlasaMessage) => { message.delete({ timeout: 10000 }); })
+					.then((message: KlasaMessage) => message.delete({ timeout: 10000 }))
 					.catch((error) => { this.client.emit('wtf', error); });
 			}
 			if (this._listeners.disconnect) this._listeners.disconnect(payload.code);
@@ -395,71 +397,68 @@ export class MusicManager {
 
 }
 
+/**
+ * The manager event listeners
+ */
 type MusicManagerListeners = {
 	end(finish?: boolean): void;
 	error(error: Error | string): void;
 	disconnect(code: number): void;
 };
 
+/**
+ * The basic lavalink node
+ */
 type LavalinkEvent = {
 	op: string;
 	type?: string;
 	guildId: string;
 };
 
-function isTrackEndEvent(x: LavalinkEvent): x is LavalinkEventTrackEndEvent {
+/**
+ * Check if it's an end event
+ * @param x The event to check
+ */
+function isTrackEndEvent(x: LavalinkEvent): x is LavalinkEvent & { track: string; reason: string } {
 	return x.type === 'TrackEndEvent';
 }
 
-function isTrackExceptionEvent(x: LavalinkEvent): x is LavalinkEventTrackExceptionEvent {
+/**
+ * Check if it's an exception event
+ * @param x The event to check
+ */
+function isTrackExceptionEvent(x: LavalinkEvent): x is LavalinkEvent & { track: string; error: string } {
 	return x.type === 'TrackExceptionEvent';
 }
 
-function isTrackStuckEvent(x: LavalinkEvent): x is LavalinkEventTrackStuckEvent {
+/**
+ * Check if it's a stuck event
+ * @param x The event to check
+ */
+function isTrackStuckEvent(x: LavalinkEvent): x is LavalinkEvent & { track: string; thresholdMs: number } {
 	return x.type === 'TrackStuckEvent';
 }
 
-function isWebSocketClosedEvent(x: LavalinkEvent): x is LavalinkEventWebSocketClosedEvent {
+/**
+ * Check if it's a ws closed event
+ * @param x The event to check
+ */
+function isWebSocketClosedEvent(x: LavalinkEvent): x is LavalinkEvent & { code: number; reason: string; byRemote: boolean } {
 	return x.type === 'WebSocketClosedEvent';
 }
 
-function isPlayerUpdate(x: LavalinkEvent): x is LavalinkEventPlayerUpdate {
+/**
+ * Check if it's a player update event
+ * @param x The event to check
+ */
+function isPlayerUpdate(x: LavalinkEvent): x is LavalinkEvent & { type: never; state: { time: number; position: number } } {
 	return x.op === 'playerUpdate';
 }
 
-function isDestroy(x: LavalinkEvent): x is LavalinkEventDestroy {
+/**
+ * Check if it's a destroy event
+ * @param x The event to check
+ */
+function isDestroy(x: LavalinkEvent): x is LavalinkEvent & { type: never } {
 	return x.op === 'destroy';
 }
-
-type LavalinkEventTrackEndEvent = LavalinkEvent & {
-	track: string;
-	reason: string;
-};
-
-type LavalinkEventTrackExceptionEvent = LavalinkEvent & {
-	track: string;
-	error: string;
-};
-
-type LavalinkEventTrackStuckEvent = LavalinkEvent & {
-	track: string;
-	thresholdMs: number;
-};
-
-type LavalinkEventWebSocketClosedEvent = LavalinkEvent & {
-	code: number;
-	reason: string;
-	byRemote: boolean;
-};
-
-type LavalinkEventPlayerUpdate = LavalinkEvent & {
-	type: never;
-	state: {
-		time: number;
-		position: number;
-	};
-};
-
-type LavalinkEventDestroy = LavalinkEvent & {
-	type: never;
-};

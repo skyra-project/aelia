@@ -7,7 +7,8 @@ export default class extends MusicCommand {
 
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
-			description: 'Check the queue list.'
+			description: 'Check the queue list.',
+			music: ['QUEUE_NOT_EMPTY']
 		});
 	}
 

@@ -8,16 +8,13 @@ export default class extends MusicCommand {
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
 			description: 'Prune the queue list.',
-			requireMusic: true
+			music: ['QUEUE_NOT_EMPTY']
 		});
 	}
 
 	public async run(message: AeliaMessage): Promise<AeliaMessage> {
 		const { music } = message.guild;
 
-		if (music.queue.length <= 1) {
-			throw `You can't delete the queue if it's empty!`;
-		}
 		if (music.voiceChannel.members.size > 4 && !await message.hasAtLeastPermissionLevel(5)) {
 			throw `You can't execute this command when there are over 4 members! You must be the Dj of this party!`;
 		}

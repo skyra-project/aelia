@@ -39,8 +39,8 @@ export class AeliaClient extends KlasaClient {
 			if (this.options.dev) this.permissionLevels.add(0, (client, message) => message.author.id === client.options.ownerID, { break: true });
 		});
 		this.on('raw', (pk) => {
-			if (pk.t === 'VOICE_STATE_UPDATE') this.lavalink.voiceStateUpdate(pk.d);
-			if (pk.t === 'VOICE_SERVER_UPDATE') this.lavalink.voiceServerUpdate(pk.d);
+			if (pk.t === 'VOICE_STATE_UPDATE') this.lavalink.voiceStateUpdate(pk.d).catch((error) => { this.emit('error', error); });
+			else if (pk.t === 'VOICE_SERVER_UPDATE') this.lavalink.voiceServerUpdate(pk.d).catch((error) => { this.emit('error', error); });
 		});
 	}
 

@@ -7,6 +7,9 @@ import { AeliaGuild } from '../extensions/AeliaGuild';
  */
 export type ConstructorType<V> = new (...args: any[]) => V;
 
+/**
+ * The AeliaMessage type
+ */
 export type AeliaMessage = KlasaMessage & {
 	guild: AeliaGuild;
 	client: AeliaClient;

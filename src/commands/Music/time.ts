@@ -8,7 +8,8 @@ export default class extends MusicCommand {
 
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
-			description: 'Check how much time is left for the song to end.'
+			description: 'Check how much time is left for the song to end.',
+			music: ['QUEUE_NOT_EMPTY', 'VOICE_PLAYING']
 		});
 	}
 

@@ -8,7 +8,7 @@ export default class extends MusicCommand {
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
 			description: 'Remove a song from the queue list.',
-			requireMusic: true,
+			music: ['QUEUE_NOT_EMPTY', 'SAME_VOICE_CHANNEL'],
 			usage: '<number:integer>'
 		});
 	}

@@ -10,7 +10,8 @@ export default class extends MusicCommand {
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
 			aliases: ['connect'],
-			description: 'Joins the message author\'s voice channel.'
+			description: 'Joins the message author\'s voice channel.',
+			music: ['USER_VOICE_CHANNEL']
 		});
 	}
 
