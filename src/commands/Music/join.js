@@ -20,8 +20,8 @@ module.exports = class extends MusicCommand {
 		const { channel } = msg.member.voice;
 		if (!channel) throw 'You are not connected in a voice channel.';
 		if (msg.guild.music.playing) {
-			const sneyraVoiceChannel = msg.guild.music.voiceChannel;
-			if (channel.id === sneyraVoiceChannel.id) throw 'Turn on your volume! I am playing music there!';
+			const AeliaVoiceChannel = msg.guild.music.voiceChannel;
+			if (channel.id === AeliaVoiceChannel.id) throw 'Turn on your volume! I am playing music there!';
 			throw 'I am sorry, but I am playing music in another channel, perhaps try later or ask nicely to the people who came first to join them!';
 		}
 		this.resolvePermissions(msg, channel);

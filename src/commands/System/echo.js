@@ -5,7 +5,7 @@ module.exports = class extends Command {
 	constructor(...args) {
 		super(...args, {
 			aliases: ['talk'],
-			description: 'Make Sneyra talk in another channel.',
+			description: 'Make Aelia talk in another channel.',
 			permissionLevel: 10,
 			usage: '[channel:channel] [message:string] [...]',
 			usageDelim: ' '
