@@ -61,6 +61,16 @@ export class MusicManager {
 		resumed: 0
 	};
 
+	/**
+	 * The event listeners
+	 */
+	@enumerable(false)
+	private readonly _listeners: MusicManagerListeners = {
+		disconnect: null,
+		end: null,
+		error: null
+	};
+
 	public constructor(guild: AeliaGuild) {
 		this.client = guild.client;
 		this.guild = guild;
@@ -152,6 +162,10 @@ export class MusicManager {
 		return (connection && connection.dispatcher) || null;
 	}
 
+	public get djUser(): KlasaUser | null {
+		return (this.dj && this.client.users.get(this.dj) as KlasaUser) || null;
+	}
+
 	/**
 	 * The voice channel's listeners
 	 */
@@ -235,6 +249,7 @@ export class MusicManager {
 	 */
 	public async leave(): Promise<this> {
 		await this.player.leave();
+		this.channel = null;
 		this.reset();
 		return this;
 	}
@@ -242,13 +257,32 @@ export class MusicManager {
 	/**
 	 * Play the queue
 	 */
-	public async play(): Promise<this> {
+	public async play(resolve: Function, reject: Function): Promise<this> {
 		if (!this.voiceChannel) throw 'Where am I supposed to play the music? I am not in a voice channel!';
 		if (!this.queue.length) throw 'No songs left in the queue!';
 		if (this.playing) throw `Decks' spinning, can't you hear it?`;
-		await this.player.play(this.queue[0].track);
+
+		// Setup the events
+		if (this._listeners.end) this._listeners.end(true);
+		this._listeners.end = (finish: boolean) => {
+			this._listeners.end = null;
+			this._listeners.disconnect = null;
+			this._listeners.error = null;
+			if (finish) resolve();
+		};
+		this._listeners.error = (error) => {
+			this._listeners.end(false);
+			reject(error);
+		};
+		this._listeners.disconnect = (code) => {
+			this._listeners.end(false);
+			if (code >= 4000) reject('I got disconnected forcefully!');
+			else resolve();
+		};
 		this.times.paused = 0;
 		this.times.resumed = Date.now();
+
+		await this.player.play(this.queue[0].track);
 		return this;
 	}
 
@@ -301,6 +335,7 @@ export class MusicManager {
 	public receiver(payload: LavalinkEvent): void {
 		// If it's the end of the track, handle next song
 		if (isTrackEndEvent(payload)) {
+			if (this._listeners.end) this._listeners.end(true);
 			if (!this.replay) this.queue.shift();
 			this.reset();
 			return;
@@ -309,6 +344,7 @@ export class MusicManager {
 		// If there was an exception, handle it accordingly
 		if (isTrackExceptionEvent(payload)) {
 			this.client.emit('error', `[LL:${this.guild.id}] Error: ${payload.error}`);
+			if (this._listeners.error) this._listeners.error(payload.error);
 			if (this.channel) this.channel.send(`Something happened!\n${util.codeBlock('', payload.error)}`)
 				.catch((error) => { this.client.emit('wtf', error); });
 			return;
@@ -332,6 +368,7 @@ export class MusicManager {
 					.then((message: KlasaMessage) => { message.delete({ timeout: 10000 }); })
 					.catch((error) => { this.client.emit('wtf', error); });
 			}
+			if (this._listeners.disconnect) this._listeners.disconnect(payload.code);
 			this.reset();
 			return;
 		}
@@ -357,6 +394,12 @@ export class MusicManager {
 	}
 
 }
+
+type MusicManagerListeners = {
+	end(finish?: boolean): void;
+	error(error: Error | string): void;
+	disconnect(code: number): void;
+};
 
 type LavalinkEvent = {
 	op: string;

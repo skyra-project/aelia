@@ -46,5 +46,3 @@ export class Song {
 	}
 
 }
-
-module.exports = Song;

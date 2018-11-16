@@ -4,7 +4,7 @@ import { AeliaGuild } from '../lib/extensions/AeliaGuild';
 
 const NOTICE = new Colors({ text: 'lightyellow' }).format('[GUILD JOIN]');
 
-module.exports = class extends Event {
+export default class extends Event {
 
 	public async run(guild: AeliaGuild): Promise<void> {
 		if (!guild.available) return null;
@@ -69,4 +69,4 @@ module.exports = class extends Event {
 		return true;
 	}
 
-};
+}
