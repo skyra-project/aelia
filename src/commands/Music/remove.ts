@@ -17,7 +17,7 @@ export default class extends MusicCommand {
 		if (index <= 0) throw 'Look, I am no expert in maths, but I kinda expected a number equal or bigger than 1...';
 
 		const { music } = message.guild;
-		if (index > music.queue.length) throw `I tried getting that song for you, but I only have ${music.queue.length} songs in my deck!`;
+		if (index > music.queue.length) throw `I tried getting that song for you, but I only have ${music.queue.length} song${music.queue.length === 1 ? '' : 's'} in my deck!`;
 
 		index--;
 		const song = music.queue[index];
