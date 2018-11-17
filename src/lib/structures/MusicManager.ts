@@ -221,6 +221,7 @@ export class MusicManager {
 	public async setVolume(volume: number): Promise<this> {
 		if (volume <= 0) throw `Woah, you can just leave the voice channel if you want silence!`;
 		if (volume > 200) throw `I'll be honest, an airplane's nacelle would be less noisy than this!`;
+		this.volume = volume;
 		await this.player.setVolume(volume);
 		return this;
 	}
@@ -250,7 +251,7 @@ export class MusicManager {
 	public async leave(): Promise<this> {
 		await this.player.leave();
 		this.channel = null;
-		this.reset();
+		this.reset(true);
 		return this;
 	}
 
@@ -317,7 +318,6 @@ export class MusicManager {
 	 */
 	public async skip(): Promise<this> {
 		this.reset();
-		this.queue.shift();
 		await this.player.stop();
 		return this;
 	}
@@ -371,7 +371,7 @@ export class MusicManager {
 					.catch((error) => { this.client.emit('wtf', error); });
 			}
 			if (this._listeners.disconnect) this._listeners.disconnect(payload.code);
-			this.reset();
+			this.reset(true);
 			return;
 		}
 
@@ -383,16 +383,16 @@ export class MusicManager {
 
 		// If it's a destroy payload, reset this instance
 		if (isDestroy(payload)) {
-			this.reset();
+			this.reset(true);
 			return;
 		}
 	}
 
-	private reset(): void {
+	private reset(volume: boolean = false): void {
 		this.position = 0;
-		this.volume = 100;
 		this.times.paused = 0;
 		this.times.resumed = 0;
+		if (volume) this.volume = 100;
 	}
 
 }

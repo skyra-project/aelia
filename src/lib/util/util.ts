@@ -25,11 +25,18 @@ export function showSeconds(duration: number): string {
  * @param value true|false
  */
 export function enumerable(value: boolean): (target: any, propertyKey: string) => void {
-	return function(target: any, propertyKey: string): void {
-		const descriptor = Object.getOwnPropertyDescriptor(target, propertyKey) || {};
-		if (descriptor.enumerable !== value) {
-			descriptor.enumerable = value;
-			Object.defineProperty(target, propertyKey, descriptor);
-		}
+	return (target, key): void => {
+		Object.defineProperty(target, key, {
+			enumerable: value,
+			set(this: any, val: any): void {
+				// tslint:disable-next-line
+				Object.defineProperty(this, key, {
+					configurable: true,
+					enumerable: value,
+					value: val,
+					writable: true,
+				});
+			},
+		});
 	};
 }
