@@ -42,7 +42,7 @@ export default class extends MusicCommand {
 			await message.sendMessage(`There was a track going on! Playing it back! Now playing: ${music.queue[0].title}!`);
 		} else {
 			music.channel = message.channel as KlasaTextChannel;
-			this.play(music);
+			this.play(music).catch((error) => this.client.emit('wtf', error));
 		}
 	}
 
