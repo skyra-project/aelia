@@ -1,4 +1,3 @@
-import { platform } from 'os';
 import { inspect } from 'util';
 import { CLIENT_OPTIONS, TOKEN } from '../config';
 import { AeliaClient } from './lib/AeliaClient';
@@ -25,6 +24,6 @@ const client = new AeliaClient(CLIENT_OPTIONS);
 client.login(TOKEN).catch((error) => { client.console.error(error); });
 
 if (!CLIENT_OPTIONS.dev) {
-	client.ipc.connectTo('ny-api', platform() === 'win32' ? '//./pipe/tmp/NyAPI.sock' : '/tmp/NyAPI.sock')
+	client.ipc.connectTo('ny-api', 9997)
 		.catch((error) => { client.console.error(error); });
 }
