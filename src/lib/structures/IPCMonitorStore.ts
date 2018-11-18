@@ -13,6 +13,7 @@ export class IPCMonitorStore extends Store<string, IPCMonitor, ConstructorType<I
 
 	public async run(message: NodeMessage): Promise<void> {
 		if (!Array.isArray(message.data) || message.data.length === 0 || message.data.length > 2) {
+			this.client.emit('error', message.data);
 			message.reply([0, 'INVALID_PAYLOAD']);
 			return;
 		}
