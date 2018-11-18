@@ -1,0 +1,25 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+        "declaration": true,
+		"lib": ["esnext"],
+		"module": "commonjs",
+		"outDir": "./dist",
+		"types": ["node", "node-fetch"],
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "removeComments": true,
+		"sourceMap": true,
+		"experimentalDecorators": true,
+        "target": "esnext"
+	},
+	"exclude": [
+		"node_modules",
+		"bin",
+		"examples",
+		"scripts"
+	],
+	"include": [
+		"./src/**/*"
+	]
+}
