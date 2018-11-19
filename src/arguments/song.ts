@@ -1,4 +1,5 @@
 import { Argument, Possible } from 'klasa';
+import { Track } from 'lavalink';
 import { URL } from 'url';
 import { AeliaMessage } from '../lib/types/Misc';
 
@@ -11,16 +12,14 @@ export default class extends Argument {
 		const parsedURL = this.parseURL(arg);
 		if (parsedURL) {
 			const tracks = await message.guild.music.fetch(arg);
-			if (!tracks.length) throw `Could not find any results for \`${arg}\``;
 			return parsedURL.playlist ? tracks : tracks[0];
 		} else if (('sc' in message.flags) || ('soundcloud' in message.flags)) {
 			const tracks = await message.guild.music.fetch(`scsearch: ${arg}`);
-			if (!tracks.length) throw `Could not find any results for \`${arg}\``;
 			return tracks[0];
 		} else {
-			const tracks = await message.guild.music.fetch(`ytsearch: ${arg}`);
-			if (!tracks.length) tracks.push(...await message.guild.music.fetch(`scsearch: ${arg}`));
-			if (!tracks.length) throw `Could not find any results for \`${arg}\``;
+			const tracks = await message.guild.music.fetch(`ytsearch: ${arg}`).catch(() => [] as Track[]);
+			if (!tracks.length) tracks.push(...await message.guild.music.fetch(`scsearch: ${arg}`).catch(() => [] as Track[]));
+			if (!tracks.length) throw message.language.get('MUSICMANAGER_FETCH_NO_MATCHES');
 			return tracks[0];
 		}
 

@@ -191,8 +191,8 @@ export class MusicManager {
 	 */
 	public async fetch(song: string): Promise<Track[]> {
 		const response = await this.client.lavalink.load(song);
-		if (response.loadType === LoadType.NO_MATCHES) throw `I'm sorry but I wasn't able to find the track!`;
-		if (response.loadType === LoadType.LOAD_FAILED) throw `I'm sorry but I couldn't load this song! Maybe try other song!`;
+		if (response.loadType === LoadType.NO_MATCHES) throw this.guild.language.get('MUSICMANAGER_FETCH_NO_MATCHES');
+		if (response.loadType === LoadType.LOAD_FAILED) throw this.guild.language.get('MUSICMANAGER_FETCH_LOAD_FAILED');
 		return response.tracks;
 	}
 
@@ -219,8 +219,8 @@ export class MusicManager {
 	 * @param volume The new volume, range of (0..200]
 	 */
 	public async setVolume(volume: number): Promise<this> {
-		if (volume <= 0) throw `Woah, you can just leave the voice channel if you want silence!`;
-		if (volume > 200) throw `I'll be honest, an airplane's nacelle would be less noisy than this!`;
+		if (volume <= 0) throw this.guild.language.get('MUSICMANAGER_SETVOLUME_SILENT');
+		if (volume > 200) throw this.guild.language.get('MUSICMANAGER_SETVOLUME_LOUD');
 		this.volume = volume;
 		await this.player.setVolume(volume);
 		return this;
@@ -259,9 +259,9 @@ export class MusicManager {
 	 * Play the queue
 	 */
 	public play(): Promise<this> {
-		if (!this.voiceChannel) return Promise.reject('Where am I supposed to play the music? I am not in a voice channel!');
-		if (!this.queue.length) return Promise.reject('No songs left in the queue!');
-		if (this.playing) return Promise.reject(`Decks' spinning, can't you hear it?`);
+		if (!this.voiceChannel) return Promise.reject(this.guild.language.get('MUSICMANAGER_PLAY_NO_VOICECHANNEL'));
+		if (!this.queue.length) return Promise.reject(this.guild.language.get('MUSICMANAGER_PLAY_NO_SONGS'));
+		if (this.playing) return Promise.reject(this.guild.language.get('MUSICMANAGER_PLAY_PLAYING'));
 
 		return new Promise((resolve, reject) => {
 			// Setup the events
@@ -278,7 +278,7 @@ export class MusicManager {
 			};
 			this._listeners.disconnect = (code) => {
 				this._listeners.end(false);
-				if (code >= 4000) reject('I got disconnected forcefully!');
+				if (code >= 4000) reject(this.guild.language.get('MUSICMANAGER_PLAY_DISCONNECTION'));
 				else resolve();
 			};
 			this.times.paused = 0;
@@ -347,7 +347,7 @@ export class MusicManager {
 		if (isTrackExceptionEvent(payload)) {
 			this.client.emit('error', `[LL:${this.guild.id}] Error: ${payload.error}`);
 			if (this._listeners.error) this._listeners.error(payload.error);
-			if (this.channel) this.channel.send(`Something happened!\n${util.codeBlock('', payload.error)}`)
+			if (this.channel) this.channel.sendLocale('MUSICMANAGER_ERROR', [util.codeBlock('', payload.error)])
 				.catch((error) => { this.client.emit('wtf', error); });
 			return;
 		}
@@ -355,7 +355,7 @@ export class MusicManager {
 		// If Lavalink gets stuck, alert the users of the downtime
 		if (isTrackStuckEvent(payload)) {
 			if (this.channel && payload.thresholdMs > 1000) {
-				this.channel.send(`Hold on, I got a little problem, I'll be back in ${Math.ceil(payload.thresholdMs / 1000)} seconds!`)
+				this.channel.sendLocale('MUSICMANAGER_STUCK', [Math.ceil(payload.thresholdMs / 1000)])
 					.then((message: KlasaMessage) => message.delete({ timeout: payload.thresholdMs }))
 					.catch((error) => { this.client.emit('wtf', error); });
 			}
@@ -366,7 +366,7 @@ export class MusicManager {
 		if (isWebSocketClosedEvent(payload)) {
 			if (payload.code >= 4000) {
 				this.client.emit('error', `[LL:${this.guild.id}] Disconnection with code ${payload.code}: ${payload.reason}`);
-				this.channel.send(`Whoops, looks like I got a little problem with Discord!`)
+				this.channel.sendLocale('MUSICMANAGER_CLOSE')
 					.then((message: KlasaMessage) => message.delete({ timeout: 10000 }))
 					.catch((error) => { this.client.emit('wtf', error); });
 			}

@@ -22,39 +22,39 @@ export default class extends Inhibitor {
 
 		// Checks for empty queue
 		if (command.music.has(FLAGS.QUEUE_NOT_EMPTY) && !message.guild.music.queue.length) {
-			throw message.guild.music.playing
-				? `The table is out of discs! Please add some to keep the spirit of this party still up!`
-				: `The table is out of discs! Please add some so we can start the party!`;
+			throw message.language.get(message.guild.music.playing
+				? 'INHIBITOR_MUSIC_QUEUE_EMPTY_PLAYING'
+				: 'INHIBITOR_MUSIC_QUEUE_EMPTY');
 		}
 
 		// Checks for playing
 		if (command.music.has(FLAGS.VOICE_PLAYING) && !message.guild.music.playing) {
-			throw message.guild.music.paused
-				? `The deck is paused! Come back when you want to fire the party up again!`
-				: `The deck is empty! I'm pretty sure it's not playing anything!`;
+			throw message.language.get(message.guild.music.paused
+				? 'INHIBITOR_MUSIC_NOT_PLAYING_PAUSED'
+				: 'INHIBITOR_MUSIC_NOT_PLAYING_STOPPED');
 		}
 
 		// Checks for paused
 		if (command.music.has(FLAGS.VOICE_PAUSED) && !message.guild.music.paused) {
-			throw message.guild.music.playing
-				? `The deck is playing and the party is still up 'till the night ends!`
-				: `The deck is empty! I'll take that as the party is chill!`;
+			throw message.language.get(message.guild.music.playing
+				? 'INHIBITOR_MUSIC_NOT_PAUSED_PLAYING'
+				: 'INHIBITOR_MUSIC_NOT_PAUSED_STOPPED');
 		}
 
 		if (command.music.has(FLAGS.DJ_MEMBER) && !await message.hasAtLeastPermissionLevel(5)) {
-			throw `I believe this is something only a moderator or the manager of this party is supposed to do!`;
+			throw message.language.get('INHIBITOR_MUSIC_DJ_MEMBER');
 		}
 
 		const sameVoiceChannel = command.music.has(FLAGS.SAME_VOICE_CHANNEL);
 		if (sameVoiceChannel || command.music.has(FLAGS.USER_VOICE_CHANNEL)) {
-			if (!message.member.voice.channelID) throw `Hey, I need you to join a voice channel before I can run this command!`;
+			if (!message.member.voice.channelID) throw message.language.get('INHIBITOR_MUSIC_USER_VOICE_CHANNEL');
 		}
 		if (sameVoiceChannel || command.music.has(FLAGS.AELIA_VOICE_CHANNEL)) {
-			if (!message.guild.me.voice.channelID) throw `I am afraid I need to be in a voice channel to operate this command, please show me the way!`;
+			if (!message.guild.me.voice.channelID) throw message.language.get('INHIBITOR_MUSIC_BOT_VOICE_CHANNEL');
 		}
 
 		if (sameVoiceChannel && message.member.voice.channelID !== message.guild.me.voice.channelID) {
-			throw `Hey! It looks like you're not in the same voice channel as me! Please come join me!`;
+			throw message.language.get('INHIBITOR_MUSIC_BOTH_VOICE_CHANNEL');
 		}
 	}
 

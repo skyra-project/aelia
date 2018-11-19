@@ -7,14 +7,14 @@ export default class extends MusicCommand {
 
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
-			description: 'Resumes the current song.',
+			description: (language) => language.get('COMMAND_RESUME_DESCRIPTION'),
 			music: ['VOICE_PAUSED', 'SAME_VOICE_CHANNEL']
 		});
 	}
 
 	public async run(message: AeliaMessage): Promise<AeliaMessage> {
 		await message.guild.music.resume();
-		return message.sendMessage('▶ Resumed') as Promise<AeliaMessage>;
+		return message.sendLocale('COMMAND_RESUME_SUCCESS') as Promise<AeliaMessage>;
 	}
 
 }

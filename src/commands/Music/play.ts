@@ -9,7 +9,7 @@ export default class extends MusicCommand {
 
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
-			description: 'Let\'s start the queue!',
+			description: (language) => language.get('COMMAND_PLAY_DESCRIPTION'),
 			music: ['USER_VOICE_CHANNEL'],
 			usage: '(song:song)'
 		});
@@ -26,7 +26,7 @@ export default class extends MusicCommand {
 			// If there are songs, add them
 			await this.client.commands.get('add').run(message, [songs]);
 		} else if (!music.queue.length) {
-			await message.sendMessage(`Deck's empty my friend, add some songs to the queue with the \`${message.guild.settings.get('prefix')}add\` command so I can play them.`);
+			await message.sendLocale('COMMAND_PLAY_QUEUE_EMPTY', [message.guild.settings.get('prefix')]);
 			return;
 		}
 
@@ -36,10 +36,10 @@ export default class extends MusicCommand {
 		}
 
 		if (music.playing) {
-			await message.sendMessage('Hey! The disk is already spinning!');
+			await message.sendLocale('COMMAND_PLAY_QUEUE_PLAYING');
 		} else if (music.paused) {
 			await music.resume();
-			await message.sendMessage(`There was a track going on! Playing it back! Now playing: ${music.queue[0].title}!`);
+			await message.sendLocale('COMMAND_PLAY_QUEUE_PAUSED', [music.queue[0].title]);
 		} else {
 			music.channel = message.channel as KlasaTextChannel;
 			this.play(music).catch((error) => this.client.emit('wtf', error));
@@ -49,7 +49,7 @@ export default class extends MusicCommand {
 	public async play(music: MusicManager): Promise<void> {
 		while (music.queue.length) {
 			const [song] = music.queue;
-			await music.channel.send(`🎧 Playing: **${song.title}** as requested by: **${song.requester}**`);
+			await music.channel.sendLocale('COMMAND_PLAY_NEXT', [song]);
 			await util.sleep(250);
 
 			try {
@@ -63,7 +63,7 @@ export default class extends MusicCommand {
 		}
 
 		if (!music.queue.length) {
-			await music.channel.send('⏹ From 1 to 10, being 1 the worst score and 10 the best, how would you rate the session? It just ended!');
+			await music.channel.sendLocale('COMMAND_PLAY_END');
 			await music.leave().catch((error) => { this.client.emit('wtf', error); });
 		}
 	}

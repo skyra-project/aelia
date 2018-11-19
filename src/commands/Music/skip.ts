@@ -9,7 +9,7 @@ export default class extends MusicCommand {
 
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
-			description: 'Skip the current song.',
+			description: (language) => language.get('COMMAND_SKIP_DESCRIPTION'),
 			music: ['QUEUE_NOT_EMPTY'],
 			usage: '[force]'
 		});
@@ -20,7 +20,7 @@ export default class extends MusicCommand {
 
 		if (music.voiceChannel.members.size > 4) {
 			if (force) {
-				if (!await message.hasAtLeastPermissionLevel(5)) throw 'You can\'t execute this command with the force flag. You must be at least a Moderator Member.';
+				if (!await message.hasAtLeastPermissionLevel(5)) throw message.language.get('COMMAND_SKIP_PERMISSIONS');
 			} else {
 				const response = this.handleSkips(music, message.author.id);
 				if (response) return message.sendMessage(response) as Promise<AeliaMessage>;
@@ -28,22 +28,22 @@ export default class extends MusicCommand {
 		}
 
 		await music.skip();
-		return message.sendMessage(`⏭ Skipped ${music.queue[0].title}`) as Promise<AeliaMessage>;
+		return message.sendLocale('COMMAND_SKIP_SUCCESS', [music.queue[0].title]) as Promise<AeliaMessage>;
 	}
 
 	public handleSkips(musicManager: MusicManager, user: Snowflake): string | false {
 		if (!musicManager.queue[0].skips) musicManager.queue[0].skips = new Set();
-		if (musicManager.queue[0].skips.has(user)) return 'You have already voted to skip this song.';
+		if (musicManager.queue[0].skips.has(user)) return musicManager.guild.language.get('COMMAND_SKIP_VOTES_VOTED');
 		musicManager.queue[0].skips.add(user);
 		const members = musicManager.listeners.length;
-		return this.shouldInhibit(members, musicManager.queue[0].skips.size);
+		return this.shouldInhibit(musicManager, members, musicManager.queue[0].skips.size);
 	}
 
-	public shouldInhibit(total: number, size: number): false | string {
+	public shouldInhibit(musicManager: MusicManager, total: number, size: number): false | string {
 		if (total <= 3) return false;
 
 		const needed = Math.ceil(total * 0.4);
-		return size >= needed ? false : `🔸 | Votes: ${size} of ${needed}`;
+		return size >= needed ? false : musicManager.guild.language.get('COMMAND_SKIP_VOTES_TOTAL', size, needed);
 	}
 
 }

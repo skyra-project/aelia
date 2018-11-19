@@ -7,14 +7,14 @@ export default class extends MusicCommand {
 
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
-			description: 'Pauses the current song.',
+			description: (language) => language.get('COMMAND_PAUSE_DESCRIPTION'),
 			music: ['VOICE_PLAYING', 'SAME_VOICE_CHANNEL']
 		});
 	}
 
 	public async run(message: AeliaMessage): Promise<AeliaMessage> {
 		await message.guild.music.pause();
-		return message.sendMessage('⏸ Paused') as Promise<AeliaMessage>;
+		return message.sendLocale('COMMAND_PAUSE_SUCCESS') as Promise<AeliaMessage>;
 	}
 
 }

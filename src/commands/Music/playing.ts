@@ -9,15 +9,15 @@ export default class extends MusicCommand {
 	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
 		super(client, store, file, directory, {
 			aliases: ['np', 'nowplaying'],
-			description: 'Get information from the current song.',
+			description: (language) => language.get('COMMAND_PLAYING_DESCRIPTION'),
 			music: ['QUEUE_NOT_EMPTY', 'VOICE_PLAYING']
 		});
 	}
 
 	public async run(message: AeliaMessage): Promise<AeliaMessage> {
 		const { queue, playing } = message.guild.music;
-		if (!queue.length) throw `Are you speaking to me? Because my deck is empty...`;
-		if (!playing) throw `I think you're listening to background noise, I'm not playing anything.`;
+		if (!queue.length) throw message.language.get('COMMAND_PLAYING_QUEUE_EMPTY');
+		if (!playing) throw message.language.get('COMMAND_PLAYING_QUEUE_NOT_PLAYING');
 
 		const [song] = queue;
 		return message.sendMessage(new MessageEmbed()
@@ -25,7 +25,7 @@ export default class extends MusicCommand {
 			.setTitle(song.title)
 			.setURL(song.url)
 			.setAuthor(song.author)
-			.setDescription(`**Duration**: ${song.friendlyDuration}`)
+			.setDescription(message.language.get('COMMAND_PLAYING_DURATION', song.friendlyDuration))
 			.setTimestamp()) as Promise<AeliaMessage>;
 	}
 
