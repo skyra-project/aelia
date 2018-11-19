@@ -19,6 +19,7 @@ export default class extends MusicCommand {
 		});
 	}
 
+	// @ts-ignore
 	public async run(message: AeliaMessage, [songs]: [Track | Track[]]): Promise<void> {
 		const { music } = message.guild;
 

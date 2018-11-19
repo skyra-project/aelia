@@ -160,6 +160,7 @@ export default class extends Language {
 			``,
 			`Aelia features:`,
 			`• Editable Commands`,
+			`• Multi-language support`,
 			`• Party tools! 🎉`
 		].join('\n'),
 
