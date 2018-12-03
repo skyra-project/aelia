@@ -27,6 +27,7 @@ export default class extends MusicCommand {
 		if (songs) {
 			// If there are songs, add them
 			await this.client.commands.get('add').run(message, [songs]);
+			if (music.playing) return;
 		} else if (!music.queue.length) {
 			await message.sendLocale('COMMAND_PLAY_QUEUE_EMPTY', [message.guild.settings.get('prefix')]);
 			return;
