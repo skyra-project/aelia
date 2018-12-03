@@ -15,10 +15,10 @@ AeliaClient.defaultGuildSchema
 
 // Modify the permission levels
 AeliaClient.defaultPermissionLevels
-	.add(5, (_, msg) => msg.member && msg.guild.settings.get('dj') && msg.member.roles.has(msg.guild.settings.get('dj')), { fetch: true })
-	.add(6, (_, msg) => msg.member
-		&& ((msg.guild.settings.get('administrator') && msg.member.roles.has(msg.guild.settings.get('administrator')))
-			|| msg.member.permissions.has('MANAGE_GUILD')), { fetch: true });
+	.add(5, (message) => message.member && message.guild.settings.get('dj') && message.member.roles.has(message.guild.settings.get('dj')), { fetch: true })
+	.add(6, (message) => message.member
+		&& ((message.guild.settings.get('administrator') && message.member.roles.has(message.guild.settings.get('administrator')))
+			|| message.member.permissions.has('MANAGE_GUILD')), { fetch: true });
 
 const client = new AeliaClient(CLIENT_OPTIONS);
 client.login(TOKEN).catch((error) => { client.console.error(error); });

@@ -1,6 +1,6 @@
-import { Snowflake, StreamDispatcher, VoiceConnection } from 'discord.js';
-import { KlasaMessage, KlasaTextChannel, KlasaUser, KlasaVoiceChannel, util } from 'klasa';
-import { LoadType, Player, Status, Track } from 'lavalink';
+import { Snowflake, StreamDispatcher, TextChannel, VoiceChannel, VoiceConnection } from 'discord.js';
+import { KlasaMessage, KlasaUser, util } from 'klasa';
+import { LoadType, Player, Status, Track, TrackResponse } from 'lavalink';
 import { AeliaClient } from '../AeliaClient';
 import { AeliaGuild } from '../extensions/AeliaGuild';
 import { enumerable } from '../util/util';
@@ -44,7 +44,7 @@ export class MusicManager {
 	 * The Channel instance where music commands are played at
 	 */
 	@enumerable(false)
-	public channel: KlasaTextChannel | null = null;
+	public channel: TextChannel | null = null;
 
 	/**
 	 * The position of the current track
@@ -142,8 +142,8 @@ export class MusicManager {
 	/**
 	 * The VoiceChannel Aelia is connected to
 	 */
-	public get voiceChannel(): KlasaVoiceChannel {
-		return this.guild.me.voice.channel as KlasaVoiceChannel;
+	public get voiceChannel(): VoiceChannel {
+		return this.guild.me.voice.channel as VoiceChannel;
 	}
 
 	/**
@@ -190,7 +190,7 @@ export class MusicManager {
 	 * @param song The song to search
 	 */
 	public async fetch(song: string): Promise<Track[]> {
-		const response = await this.client.lavalink.load(song);
+		const response = <unknown> await this.client.lavalink.load(song) as TrackResponse;
 		if (response.loadType === LoadType.NO_MATCHES) throw this.guild.language.get('MUSICMANAGER_FETCH_NO_MATCHES');
 		if (response.loadType === LoadType.LOAD_FAILED) throw this.guild.language.get('MUSICMANAGER_FETCH_LOAD_FAILED');
 		return response.tracks;
@@ -240,7 +240,7 @@ export class MusicManager {
 	 * Join a voice channel, handling ECONNRESETs
 	 * @param voiceChannel Join a voice channel
 	 */
-	public async join(voiceChannel: KlasaVoiceChannel): Promise<this> {
+	public async join(voiceChannel: VoiceChannel): Promise<this> {
 		await this.player.join(voiceChannel.id, { deaf: true });
 		return this;
 	}

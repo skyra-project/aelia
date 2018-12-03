@@ -36,7 +36,7 @@ export class AeliaClient extends KlasaClient {
 		this.registerStore(this.ipcMonitors);
 
 		this.once('klasaReady', () => {
-			if (this.options.dev) this.permissionLevels.add(0, (client, message) => message.author.id === client.options.ownerID, { break: true });
+			if (this.options.dev) this.permissionLevels.add(0, (message) => message.author.id === this.options.ownerID, { break: true });
 		});
 		this.on('raw', (pk) => {
 			if (pk.t === 'VOICE_STATE_UPDATE') this.lavalink.voiceStateUpdate(pk.d).catch((error) => { this.emit('error', error); });

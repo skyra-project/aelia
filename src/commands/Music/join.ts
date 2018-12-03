@@ -1,5 +1,5 @@
-import { Permissions } from 'discord.js';
-import { CommandStore, KlasaVoiceChannel } from 'klasa';
+import { Permissions, VoiceChannel } from 'discord.js';
+import { CommandStore } from 'klasa';
 import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
 import { AeliaMessage } from '../../lib/types/Misc';
@@ -29,13 +29,13 @@ export default class extends MusicCommand {
 			if (channel.id === aeliaVoiceChannel.id) throw message.language.get('COMMAND_JOIN_VOICE_SAME');
 			throw message.language.get('COMMAND_JOIN_VOICE_DIFFERENT');
 		}
-		this.resolvePermissions(message, channel as KlasaVoiceChannel);
+		this.resolvePermissions(message, channel as VoiceChannel);
 
-		await message.guild.music.join(channel as KlasaVoiceChannel);
+		await message.guild.music.join(channel as VoiceChannel);
 		return message.sendLocale('COMMAND_JOIN_SUCCESS', [channel]) as Promise<AeliaMessage>;
 	}
 
-	public resolvePermissions(message: AeliaMessage, voiceChannel: KlasaVoiceChannel): void {
+	public resolvePermissions(message: AeliaMessage, voiceChannel: VoiceChannel): void {
 		if (voiceChannel.full) throw message.language.get('COMMAND_JOIN_VOICE_FULL');
 
 		const permissions = voiceChannel.permissionsFor(message.guild.me);

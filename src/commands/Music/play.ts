@@ -1,4 +1,5 @@
-import { CommandStore, KlasaTextChannel, util } from 'klasa';
+import { TextChannel } from 'discord.js';
+import { CommandStore, util } from 'klasa';
 import { Track } from 'lavalink';
 import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
@@ -42,7 +43,7 @@ export default class extends MusicCommand {
 			await music.resume();
 			await message.sendLocale('COMMAND_PLAY_QUEUE_PAUSED', [music.queue[0].title]);
 		} else {
-			music.channel = message.channel as KlasaTextChannel;
+			music.channel = message.channel as TextChannel;
 			this.play(music).catch((error) => this.client.emit('wtf', error));
 		}
 	}

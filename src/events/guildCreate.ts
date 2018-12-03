@@ -1,5 +1,5 @@
-import { Snowflake } from 'discord.js';
-import { Colors, Event, KlasaTextChannel } from 'klasa';
+import { Snowflake, TextChannel } from 'discord.js';
+import { Colors, Event } from 'klasa';
 import { AeliaGuild } from '../lib/extensions/AeliaGuild';
 
 const NOTICE = new Colors({ text: 'lightyellow' }).format('[GUILD JOIN]');
@@ -19,7 +19,7 @@ export default class extends Event {
 	public log(guild: AeliaGuild, leave: boolean): void {
 		this.client.emit('log', `${NOTICE} ${guild.id} → ${guild.name}`);
 
-		const statusChannel = this.client.channels.get('444088744279146496') as KlasaTextChannel;
+		const statusChannel = this.client.channels.get('444088744279146496') as TextChannel;
 		if (statusChannel) {
 			statusChannel.sendCode('http', [
 				'AELIA 4.0.0\n',

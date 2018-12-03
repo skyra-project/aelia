@@ -1,5 +1,5 @@
-import { MessageOptions } from 'discord.js';
-import { CommandStore, KlasaTextChannel } from 'klasa';
+import { MessageOptions, TextChannel } from 'discord.js';
+import { CommandStore } from 'klasa';
 import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
 import { AeliaMessage } from '../../lib/types/Misc';
@@ -16,7 +16,7 @@ export default class extends MusicCommand {
 		});
 	}
 
-	public async run(message: AeliaMessage, [channel = message.channel as KlasaTextChannel, content]: [KlasaTextChannel, string]): Promise<AeliaMessage> {
+	public async run(message: AeliaMessage, [channel = message.channel as TextChannel, content]: [TextChannel, string]): Promise<AeliaMessage> {
 		if (message.deletable) message.delete().catch(() => null);
 
 		const attachment = message.attachments.size > 0 ? message.attachments.first().url : null;
