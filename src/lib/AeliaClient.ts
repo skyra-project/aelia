@@ -24,7 +24,7 @@ export class AeliaClient extends KlasaClient {
 	public lavalink = new Lavalink({
 		send: async(guildID: string, packet: any) => {
 			const guild = this.guilds.get(guildID);
-			if (guild) this.ws.shards[guild.shardID].send(packet);
+			if (guild) this.ws.shards.get(guild.shardID).send(packet);
 			else throw new Error('attempted to send a packet on the wrong shard');
 		},
 		...this.options.lavalink

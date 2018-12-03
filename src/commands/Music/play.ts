@@ -58,7 +58,7 @@ export default class extends MusicCommand {
 				await music.play();
 			} catch (error) {
 				if (typeof error !== 'string') this.client.emit('error', error);
-				await music.channel.send(error);
+				if (music.channel) await music.channel.send(error);
 				await music.leave();
 				break;
 			}
