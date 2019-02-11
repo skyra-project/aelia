@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "discord.js": "github:discordjs/discord.js",
-    "fs-nextra": "^0.3.7",
+    "fs-nextra": "^0.4.2",
     "klasa": "github:dirigeants/klasa",
     "lavalink": "2.3.1",
     "node-fetch": "^2.3.0",
