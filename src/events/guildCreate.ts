@@ -40,10 +40,10 @@ export default class extends Event {
 
 		// Check whether the guild or the guild owner are whitelisted or blacklisted
 		const { settings } = this.client;
-		const guildBlacklist = settings.get<Snowflake[]>('guildBlacklist');
-		const userBlacklist = settings.get<Snowflake[]>('userBlacklist');
-		const guildWhitelist = settings.get<Snowflake[]>('guildWhitelist');
-		const userWhitelist = settings.get<Snowflake[]>('userWhitelist');
+		const guildBlacklist = settings.get('guildBlacklist') as Snowflake[];
+		const userBlacklist = settings.get('userBlacklist') as Snowflake[];
+		const guildWhitelist = settings.get('guildWhitelist') as Snowflake[];
+		const userWhitelist = settings.get('userWhitelist') as Snowflake[];
 
 		if (guildBlacklist.includes(guild.id)
 			|| userBlacklist.includes(guild.ownerID)) return true;
@@ -53,7 +53,7 @@ export default class extends Event {
 		const member = await guild.members.fetch(guild.ownerID).catch(() => null);
 		if (!member) return true;
 
-		const userAlertedList = settings.get<Snowflake[]>('userAlertedList');
+		const userAlertedList = settings.get('userAlertedList') as Snowflake[];
 
 		if (!userAlertedList.includes(member.id)) {
 			await settings.update('userAlertedList', member.user);
