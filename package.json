@@ -12,7 +12,7 @@
     "pm2:start": "pm2 start dist/src/Aelia.js --name=\"Aelia\"",
     "pm2:stop": "pm2 stop Aelia",
     "start": "node dist/src/Aelia.js",
-    "test": "tslint -p tsconfig.json src/**/*.ts",
+    "test:lint": "tslint -p tsconfig.json src/**/*.ts",
     "update": "yarn",
     "compile": "tsc -p ."
   },
