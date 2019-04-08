@@ -1,3 +1,5 @@
+// Remove `.example` from the file extension to configure Aelia
+
 import { AeliaClientOptions } from './src/lib/AeliaClient';
 
 // eslint-disable-next-line no-process-env
