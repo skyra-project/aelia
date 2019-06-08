@@ -1,18 +1,23 @@
 import { IPCMonitorStore } from '../structures/IPCMonitorStore';
 import { Node } from 'veza';
 import { BaseNodeOptions, Node as Lavalink } from 'lavalink';
+import { Queue } from '../structures/music/Queue';
 
 declare module 'discord.js' {
 
 	interface Client {
-		ipcMonitors: IPCMonitorStore;
-		ipc: Node;
-		lavalink: Lavalink;
+		readonly ipcMonitors: IPCMonitorStore;
+		readonly ipc: Node;
+		readonly lavalink: Lavalink;
 	}
 
 	interface ClientOptions {
 		dev?: boolean;
 		lavalink?: BaseNodeOptions;
+	}
+
+	interface Guild {
+		readonly music: Queue;
 	}
 
 }

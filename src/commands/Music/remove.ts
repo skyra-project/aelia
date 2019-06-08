@@ -1,6 +1,5 @@
-import { CommandStore } from 'klasa';
+import { CommandStore, KlasaMessage } from 'klasa';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
-import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
@@ -12,20 +11,20 @@ export default class extends MusicCommand {
 		});
 	}
 
-	public async run(message: AeliaMessage, [index]: [number]): Promise<AeliaMessage> {
+	public async run(message: KlasaMessage, [index]: [number]) {
 		if (index <= 0) throw message.language.get('COMMAND_REMOVE_INDEX_INVALID');
 
-		const { music } = message.guild;
-		if (index > music.queue.length) throw message.language.get('COMMAND_REMOVE_INDEX_OUT', music.queue.length);
+		const { music } = message.guild!;
+		if (index > music.length) throw message.language.get('COMMAND_REMOVE_INDEX_OUT', music.length);
 
 		index--;
-		const song = music.queue[index];
-		if (song.requester.id !== message.author!.id && !await message.hasAtLeastPermissionLevel(5)) {
+		const song = music[index];
+		if (song.requester !== message.author!.id && !await message.hasAtLeastPermissionLevel(5)) {
 			throw message.language.get('COMMAND_REMOVE_DENIED');
 		}
 
-		music.queue.splice(index, 1);
-		return message.sendLocale('COMMAND_REMOVE_SUCCESS', [song]) as Promise<AeliaMessage>;
+		music.splice(index, 1);
+		return message.sendLocale('COMMAND_REMOVE_SUCCESS', [song]);
 	}
 
 }

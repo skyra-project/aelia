@@ -1,6 +1,5 @@
-import { CommandStore } from 'klasa';
+import { CommandStore, KlasaMessage } from 'klasa';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
-import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
@@ -11,9 +10,9 @@ export default class extends MusicCommand {
 		});
 	}
 
-	public async run(message: AeliaMessage): Promise<AeliaMessage> {
-		await message.guild.music.resume();
-		return message.sendLocale('COMMAND_RESUME_SUCCESS') as Promise<AeliaMessage>;
+	public async run(message: KlasaMessage) {
+		await message.guild!.music.resume();
+		return message.sendLocale('COMMAND_RESUME_SUCCESS');
 	}
 
 }

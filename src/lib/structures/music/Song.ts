@@ -1,7 +1,7 @@
-import { Snowflake } from 'discord.js';
-import { KlasaUser } from 'klasa';
 import { Track } from 'lavalink';
-import { enumerable, showSeconds } from '../util/util';
+import { enumerable, showSeconds } from '../../util/util';
+import { Queue } from './Queue';
+import { UserManagerStore } from './UserManagerStore';
 
 export class Song {
 
@@ -9,7 +9,10 @@ export class Song {
 	public track: string;
 
 	@enumerable(false)
-	public requester: KlasaUser;
+	public requester: string;
+
+	@enumerable(false)
+	public queue: Queue;
 
 	public identifier: string;
 	public seekable: boolean;
@@ -19,13 +22,14 @@ export class Song {
 	public position: number;
 	public title: string;
 	public url: string;
-	public skips: Set<Snowflake> = new Set();
+	public skips: UserManagerStore;
 
 	/**
 	 * @param data The retrieved data
 	 * @param requester The user that requested this song
 	 */
-	public constructor(data: Track, requester: KlasaUser) {
+	public constructor(queue: Queue, data: Track, requester: string) {
+		this.queue = queue;
 		this.track = data.track;
 		this.requester = requester;
 		this.identifier = data.info.identifier;
@@ -36,15 +40,23 @@ export class Song {
 		this.position = data.info.position;
 		this.title = data.info.title;
 		this.url = data.info.uri;
-		this.skips = new Set();
+		this.skips = new UserManagerStore(this.queue.client);
 	}
 
 	public get friendlyDuration(): string {
 		return showSeconds(this.duration);
 	}
 
+	public async fetchRequester() {
+		try {
+			return await this.queue.client.users.fetch(this.requester);
+		} catch {
+			return null;
+		}
+	}
+
 	public toString(): string {
-		return `Song<${this.url}>`;
+		return `<${this.url}>`;
 	}
 
 }

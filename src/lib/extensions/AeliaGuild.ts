@@ -1,13 +1,13 @@
 import { Structures } from 'discord.js';
 import { KlasaGuild } from 'klasa';
-import { MusicManager } from '../structures/MusicManager';
+import { Queue } from '../structures/music/Queue';
 
 export class AeliaGuild extends KlasaGuild {
 
 	/**
 	 * The MusicManager instance for this client
 	 */
-	public music = new MusicManager(this);
+	public readonly music: Queue = new Queue(this);
 
 }
 

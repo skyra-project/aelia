@@ -1,9 +1,7 @@
-import { TextChannel } from 'discord.js';
-import { CommandStore, util } from 'klasa';
+import { CommandStore, KlasaMessage, util } from 'klasa';
 import { Track } from 'lavalink';
+import { Queue } from '../../lib/structures/music/Queue';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
-import { MusicManager } from '../../lib/structures/MusicManager';
-import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
@@ -11,24 +9,23 @@ export default class extends MusicCommand {
 		super(store, file, directory, {
 			description: language => language.get('COMMAND_PLAY_DESCRIPTION'),
 			music: ['USER_VOICE_CHANNEL'],
-			usage: '(song:song)'
+			usage: '(song:song)',
+			flagSupport: true
 		});
 
-		this.createCustomResolver('song', (arg, possible, message) => arg
-			? this.client.arguments.get('song').run(arg, possible, message)
-			: null);
+		this.createCustomResolver('song', (arg, possible, message) => arg ? this.client.arguments.get('song').run(arg, possible, message) : null);
 	}
 
 	// @ts-ignore
-	public async run(message: AeliaMessage, [songs]: [Track | Track[]]): Promise<void> {
-		const { music } = message.guild;
+	public async run(message: KlasaMessage, [songs]: [Track | Track[]]) {
+		const { music } = message.guild!;
 
 		if (songs) {
 			// If there are songs, add them
 			await this.client.commands.get('add').run(message, [songs]);
 			if (music.playing) return;
-		} else if (!music.queue.length) {
-			await message.sendLocale('COMMAND_PLAY_QUEUE_EMPTY', [message.guild.settings.get('prefix')]);
+		} else if (!music.canPlay) {
+			await message.sendLocale('COMMAND_QUEUE_EMPTY');
 			return;
 		}
 
@@ -41,17 +38,17 @@ export default class extends MusicCommand {
 			await message.sendLocale('COMMAND_PLAY_QUEUE_PLAYING');
 		} else if (music.paused) {
 			await music.resume();
-			await message.sendLocale('COMMAND_PLAY_QUEUE_PAUSED', [music.queue[0].title]);
+			await message.sendLocale('COMMAND_PLAY_QUEUE_PAUSED', [music.song]);
 		} else {
-			music.channel = message.channel as TextChannel;
+			music.channelID = message.channel.id;
 			this.play(music).catch(error => this.client.emit('wtf', error));
 		}
 	}
 
-	public async play(music: MusicManager): Promise<void> {
-		while (music.queue.length) {
-			const [song] = music.queue;
-			await music.channel!.sendLocale('COMMAND_PLAY_NEXT', [song]);
+	public async play(music: Queue): Promise<void> {
+		while (music.length && music.channel) {
+			const [song] = music;
+			await music.channel.sendLocale('COMMAND_PLAY_NEXT', [song.title, await song.fetchRequester()]);
 			await util.sleep(250);
 
 			try {
@@ -64,10 +61,11 @@ export default class extends MusicCommand {
 			}
 		}
 
-		if (!music.queue.length) {
+		if (!music.length && music.channelID) {
 			await music.channel!.sendLocale('COMMAND_PLAY_END');
-			await music.leave()
-				.catch(error => { this.client.emit('wtf', error); });
+			await music.leave().catch(error => {
+				this.client.emit('wtf', error);
+			});
 		}
 	}
 

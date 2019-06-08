@@ -1,6 +1,5 @@
-import { CommandStore } from 'klasa';
+import { CommandStore, KlasaMessage } from 'klasa';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
-import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
@@ -13,13 +12,13 @@ export default class extends MusicCommand {
 		});
 	}
 
-	public async run(message: AeliaMessage, [volume]: [number]): Promise<AeliaMessage> {
-		const { music } = message.guild;
+	public async run(message: KlasaMessage, [volume]: [number]) {
+		const { music } = message.guild!;
 		const previousVolume = music.volume;
 
 		// If no argument was given
 		if (typeof volume === 'undefined' || volume === previousVolume) {
-			return message.sendLocale('COMMAND_VOLUME_SUCCESS', [previousVolume]) as Promise<AeliaMessage>;
+			return message.sendLocale('COMMAND_VOLUME_SUCCESS', [previousVolume]);
 		}
 
 		// Set the volume
@@ -27,7 +26,7 @@ export default class extends MusicCommand {
 		return message.sendLocale('COMMAND_VOLUME_CHANGED', [volume > previousVolume
 			? (volume === 200 ? '📢' : '🔊')
 			: (volume === 0 ? '🔇' : '🔉'),
-		volume]) as Promise<AeliaMessage>;
+		volume]);
 	}
 
 }

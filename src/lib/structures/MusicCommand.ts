@@ -1,8 +1,8 @@
 import { BitFieldResolvable } from 'discord.js';
-import { Command, CommandOptions, CommandStore, util } from 'klasa';
+import { CommandOptions, Command, CommandStore, util } from 'klasa';
 import { MusicBitField, MusicBitFieldString } from './MusicBitField';
 
-export class MusicCommand extends Command {
+export abstract class MusicCommand extends Command {
 
 	/**
 	 * Whether this command requires an active VoiceConnection or not
