@@ -38,10 +38,10 @@ export const CLIENT_OPTIONS: KlasaClientOptions = {
 		monitors: { ignoreOthers: false }
 	},
 	prefix: DEV ? 'md.' : 'm.',
-	presence: { status: 'online', activity: { type: 'LISTENING', name: 'Aelia, help' } },
+	presence: { activity: { name: DEV ? 'md.help' : 'Aelia, help', type: 'LISTENING' } },
 	readyMessage: client =>
 		`Aelia 4.1.0 ready! [${client.user!.tag}] [ ${client.guilds.size} [G]] [ ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()} [U]].`,
-	regexPrefix: /aelia[,!]/i,
+	regexPrefix: DEV ? undefined : /^(hey[ ]+)?(ruby|aelia)[,! ]/i,
 	slowmode: 1000,
 	slowmodeAggressive: true,
 	typing: true
