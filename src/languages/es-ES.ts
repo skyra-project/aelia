@@ -1,7 +1,9 @@
 // @ts-nocheck
 import { Language, util } from 'klasa';
+import { EMOJIS } from '../lib/util/constants';
 
-/* tslint:disable object-literal-sort-keys */
+const { GREENTICK, REDCROSS } = EMOJIS;
+
 export default class extends Language {
 
 	public language = {
@@ -153,56 +155,55 @@ export default class extends Language {
 
 		COMMAND_ADD_DESCRIPTION: `Añade una canción a la cola.`,
 		COMMAND_ADD_PLAYLIST: amount => amount === 1
-			? `🎵 Añadida **una** canción a la cola 🎶`
-			: `🎵 Añadidas **${amount}** canciones a la cola 🎶`,
-		COMMAND_ADD_SONG: title => `🎵 Añadida la canción **${title}** a la cola 🎶`,
+			? `${GREENTICK} Añadida **una** canción a la cola 🎶`
+			: `${GREENTICK} Añadidas **${amount}** canciones a la cola 🎶`,
+		COMMAND_ADD_SONG: title => `${GREENTICK} Añadida la canción **${title}** a la cola 🎶`,
 		COMMAND_CLEAR_DESCRIPTION: `Borra las canciones de la cola.`,
-		COMMAND_CLEAR_DENIED: `¡No puedes ejecutar este comando mientras que hayan más de 4 usuarios! ¡Debes ser el Dj de esta fiesta!`,
+		COMMAND_CLEAR_DENIED: `${REDCROSS} ¡No puedes ejecutar este comando mientras que hayan más de 4 usuarios! ¡Debes ser el Dj de esta fiesta!`,
 		COMMAND_CLEAR_SUCCESS: amount => amount === 1
-			? `🗑 Una canción fue borrada de la cola.`
-			: `🗑 ${amount} canciones fueron borradas de la cola.`,
+			? `${REDCROSS} Una canción fue borrada de la cola.`
+			: `${REDCROSS} ${amount} canciones fueron borradas de la cola.`,
 		COMMAND_JOIN_DESCRIPTION: `Unirse al canal de voz del autor del mensaje.`,
-		COMMAND_JOIN_NO_MEMBER: `Lo siento, pero Discord no me ha mandado la información necesaria que necesito para saber en qué canal de voz estás conectado/a...`,
-		COMMAND_JOIN_NO_VOICECHANNEL: `No estás conectado/a a un canal de voz.`,
-		COMMAND_JOIN_SUCCESS: channel => `Me he conectado con éxito al canal de voz ${channel}`,
-		COMMAND_JOIN_VOICE_DIFFERENT: `Lo siento, pero estoy reproduciendo música en otro canal de voz. ¡Intenta de nuevo más tarde o únete a ellos!`,
-		COMMAND_JOIN_VOICE_FULL: `No puedo unirme a tu canal de voz, está lleno... ¡echa a alguien con las botas o haz espacio para mí!`,
-		COMMAND_JOIN_VOICE_NO_CONNECT: `No tengo suficientes permisos para unirme a tu canal de voz, necesito el permiso para conectarme a canales de voz.`,
-		COMMAND_JOIN_VOICE_NO_SPEAK: `Puedo conectarme... pero no hablar. Por favor dame permisos para hablar.`,
-		COMMAND_JOIN_VOICE_SAME: `¡Sube el volumen! ¡Ya estoy reproduciendo música ahí!`,
+		COMMAND_JOIN_NO_MEMBER: `${REDCROSS} Lo siento, pero Discord no me ha mandado la información necesaria que necesito para saber en qué canal de voz estás conectado/a...`,
+		COMMAND_JOIN_NO_VOICECHANNEL: `${REDCROSS} No estás conectado/a a un canal de voz.`,
+		COMMAND_JOIN_SUCCESS: channel => `${GREENTICK} Me he conectado con éxito al canal de voz ${channel}`,
+		COMMAND_JOIN_VOICE_DIFFERENT: `${REDCROSS} Lo siento, pero estoy reproduciendo música en otro canal de voz. ¡Intenta de nuevo más tarde o únete a ellos!`,
+		COMMAND_JOIN_VOICE_FULL: `${REDCROSS} No puedo unirme a tu canal de voz, está lleno... ¡echa a alguien con las botas o haz espacio para mí!`,
+		COMMAND_JOIN_VOICE_NO_CONNECT: `${REDCROSS} No tengo suficientes permisos para unirme a tu canal de voz, necesito el permiso para conectarme a canales de voz.`,
+		COMMAND_JOIN_VOICE_NO_SPEAK: `${REDCROSS} Puedo conectarme... pero no hablar. Por favor dame permisos para hablar.`,
+		COMMAND_JOIN_VOICE_SAME: `${REDCROSS} ¡Sube el volumen! ¡Ya estoy reproduciendo música ahí!`,
 		COMMAND_LEAVE_DESCRIPTION: `Desconecta del canal de voz.`,
-		COMMAND_LEAVE_SUCCESS: channel => `Me he desconectado con éxito del canal de voz ${channel}`,
+		COMMAND_LEAVE_SUCCESS: channel => `${GREENTICK} Me he desconectado con éxito del canal de voz ${channel}`,
 		COMMAND_PAUSE_DESCRIPTION: `Pausa la canción actual.`,
-		COMMAND_PAUSE_SUCCESS: '⏸ Pausado.',
+		COMMAND_PAUSE_SUCCESS: `${GREENTICK} Pausado.`,
 		COMMAND_PLAY_DESCRIPTION: `¡Empecemos la cola!`,
-		COMMAND_PLAY_END: `⏹ Del 1 al 10, siendo 1 la peor puntuación y 10 la mejor, ¿cómo valorarías la sesión? ¡Ya ha terminado!`,
-		COMMAND_PLAY_NEXT: song => `🎧 Reproduciendo: **${song.title}**, pedida por: **${song.requester}**`,
-		COMMAND_PLAY_QUEUE_EMPTY: prefix => `La cola está vacía, ¡añade algunas canciones a la cola con el comando \`${prefix}add\`!`,
+		COMMAND_PLAY_END: `Del 1 al 10, siendo 1 la peor puntuación y 10 la mejor, ¿cómo valorarías la sesión? ¡Ya ha terminado!`,
+		COMMAND_PLAY_NEXT: (title, requester) => `🎧 Reproduciendo: **${title}**, pedida por: **${requester}**`,
 		COMMAND_PLAY_QUEUE_PAUSED: song => `¡Había una canción pausada! ¡Reproduciéndolo ahora! Ahora reproduciendo: ${song}!`,
-		COMMAND_PLAY_QUEUE_PLAYING: `¡Ey! ¡El disco ya está girando!`,
+		COMMAND_PLAY_QUEUE_PLAYING: `${REDCROSS} ¡Ey! ¡El disco ya está girando!`,
 		COMMAND_PLAYING_DESCRIPTION: `Obtén información de la canción actual.`,
 		COMMAND_PLAYING_DURATION: duration => `**Duración**: ${duration}`,
-		COMMAND_PLAYING_QUEUE_EMPTY: `¿Es conmigo? Porque no hay nada en reproducción...`,
-		COMMAND_PLAYING_QUEUE_NOT_PLAYING: `Creo que estás escuchando ruido de fondo, no estoy reproduciendo nada.`,
+		COMMAND_PLAYING_QUEUE_EMPTY: `${REDCROSS} ¿Es conmigo? Porque no hay nada en reproducción...`,
+		COMMAND_PLAYING_QUEUE_NOT_PLAYING: `${REDCROSS} Creo que estás escuchando ruido de fondo, no estoy reproduciendo nada.`,
 		COMMAND_QUEUE_DESCRIPTION: `Revisa la lista de cola.`,
-		COMMAND_QUEUE_EMPTY: prefix => `¡La cola está vacía! Pero puedes añadir algunas canciones usando el comando \`${prefix}add\`.`,
+		COMMAND_QUEUE_EMPTY: `¡La cola está vacía! Pero puedes añadir algunas canciones usando el comando \`Aelia, add Marcha Imperial\`, y... *redoble de tambores*.`,
+		COMMAND_QUEUE_LAST: `¡No hay más canciones! Después de que termine esta, ¡la sesión terminará!`,
 		COMMAND_QUEUE_LINE: (title, requester) => `*${title}*, pedida por: **${requester}**`,
 		COMMAND_QUEUE_TRUNCATED: amount => `Mostrando 10 canciones de ${amount}`,
 		COMMAND_REMOVE_DESCRIPTION: `Elimina una canción de la lista de cola.`,
-		COMMAND_REMOVE_INDEX_INVALID: `Mira, no soy una experta en mates, pero esperaba un número igual o mayor que 1...`,
-		COMMAND_REMOVE_INDEX_OUT: amount => `He intentado acceder a esa canción por tí, ¡pero sólo tengo ${amount} ${amount === 1 ? 'canción' : 'canciones'} en mi mesa!`,
-		COMMAND_REMOVE_DENIED: [
-			`Lo veo un poco rudo el borrar la canción de alguien de la lista... Habla con ellos para quitarla o`,
-			`grita al DJ si hay uno en este servidor, si la canción arruina la fiesta, ¡entonces ellos probablemente lo consideren!`
-		].join(' '),
-		COMMAND_REMOVE_SUCCESS: song => `🗑 Borrada la canción **${song.title}**, pedida por **${song.requester}**, de la cola.`,
+		COMMAND_REMOVE_INDEX_INVALID: `${REDCROSS} Mira, no soy una experta en mates, pero esperaba un número igual o mayor que 1...`,
+		COMMAND_REMOVE_INDEX_OUT: amount => `${REDCROSS} He intentado acceder a esa canción por tí, ¡pero sólo tengo ${amount} ${amount === 1 ? 'canción' : 'canciones'} en mi mesa!`,
+		COMMAND_REMOVE_DENIED: `${REDCROSS} Vamos a ser amables, no quites las canciones de los demás si no eres un DJ o un moderador.`,
+		COMMAND_REMOVE_SUCCESS: song => `${GREENTICK} Borrada la canción **${song.title}**, pedida por **${song.requester}**, de la cola.`,
 		COMMAND_RESUME_DESCRIPTION: `Reanuda la canción actual.`,
-		COMMAND_RESUME_SUCCESS: `▶ Reanudado.`,
+		COMMAND_RESUME_SUCCESS: `${GREENTICK} Reanudado.`,
 		COMMAND_SKIP_DESCRIPTION: `Salta la canción actual.`,
-		COMMAND_SKIP_PERMISSIONS: `No puedes ejecutar este comando, debes ser un DJ o un Moderador.`,
-		COMMAND_SKIP_VOTES_VOTED: `Ya has votado para saltar esta canción.`,
+		COMMAND_SKIP_PERMISSIONS: `${REDCROSS} No puedes ejecutar este comando, debes ser un DJ o un Moderador.`,
+		COMMAND_SKIP_VOTES_VOTED: `${REDCROSS} Ya has votado para saltar esta canción.`,
 		COMMAND_SKIP_VOTES_TOTAL: (amount, needed) => `🔸 | Votos: ${amount} de ${needed}`,
 		COMMAND_SKIP_SUCCESS: title => `⏭ Saltada la canción ${title}.`,
+		COMMAND_SHUFFLE_DESCRIPTION: 'Aleatoriza el orden de las canciones en la lista.',
+		COMMAND_SHUFFLE_SUCCESS: amount => `${GREENTICK} Aleatorizado con éxito ${amount} ${amount === 1 ? 'canción' : 'canciones'}.`,
 		COMMAND_TIME_DESCRIPTION: `Revisa cuánto tiempo falta para terminar la canción.`,
 		COMMAND_TIME_QUEUE_EMPTY: `¿Es conmigo? La cola está vacía...`,
 		COMMAND_TIME_STREAM: `La canción actual es un directo, no tiene tiempo restante.`,

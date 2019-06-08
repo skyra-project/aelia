@@ -1,0 +1,6 @@
+export const EMOJIS = Object.freeze({
+	GREENTICK: '<:greenTick:405073335907647489>',
+	LOADING: '<a:SkyraLoading:497584859045429250>',
+	REDCROSS: '<:redCross:405073349664833537>',
+	SHINY: '<:ShinyYellow:324157128270938113>'
+});
