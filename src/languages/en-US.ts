@@ -231,6 +231,7 @@ export default class extends Language {
 		INHIBITOR_MUSIC_BOT_VOICE_CHANNEL: `I am afraid I need to be in a voice channel to operate this command, please show me the way!`,
 		INHIBITOR_MUSIC_BOTH_VOICE_CHANNEL: `Hey! It looks like you're not in the same voice channel as me! Please come join me!`,
 
+		MUSICMANAGER_FETCH_NO_ARGUMENTS: `I need you to give me the name of a song!`,
 		MUSICMANAGER_FETCH_NO_MATCHES: `I'm sorry but I wasn't able to find the track!`,
 		MUSICMANAGER_FETCH_LOAD_FAILED: `I'm sorry but I couldn't load this song! Maybe try other song!`,
 		MUSICMANAGER_SETVOLUME_SILENT: `Woah, you can just leave the voice channel if you want silence!`,
