@@ -52,12 +52,12 @@ export class AeliaClient extends KlasaClient {
 }
 
 AeliaClient.defaultClientSchema
-	.add('guildBlacklist', 'string', { array: true })
-	.add('guildWhitelist', 'string', { array: true })
-	.add('userBlacklist', 'user', { array: true })
-	.add('userWhitelist', 'user', { array: true })
-	.add('userAlertedList', 'user', { array: true });
+	.add('guildBlacklist', 'String', { array: true })
+	.add('guildWhitelist', 'String', { array: true })
+	.add('userBlacklist', 'User', { array: true })
+	.add('userWhitelist', 'User', { array: true })
+	.add('userAlertedList', 'User', { array: true });
 
 AeliaClient.defaultGuildSchema
-	.add('administrator', 'role')
-	.add('dj', 'role');
+	.add('administrator', 'Role')
+	.add('dj', 'Role');
