@@ -1,15 +1,14 @@
 import { Snowflake } from 'discord.js';
 import { CommandStore } from 'klasa';
-import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
 import { MusicManager } from '../../lib/structures/MusicManager';
 import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
-	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
-		super(client, store, file, directory, {
-			description: (language) => language.get('COMMAND_SKIP_DESCRIPTION'),
+	public constructor(store: CommandStore, file: string[], directory: string) {
+		super(store, file, directory, {
+			description: language => language.get('COMMAND_SKIP_DESCRIPTION'),
 			music: ['QUEUE_NOT_EMPTY'],
 			usage: '[force]'
 		});
@@ -22,7 +21,7 @@ export default class extends MusicCommand {
 			if (force) {
 				if (!await message.hasAtLeastPermissionLevel(5)) throw message.language.get('COMMAND_SKIP_PERMISSIONS');
 			} else {
-				const response = this.handleSkips(music, message.author.id);
+				const response = this.handleSkips(music, message.author!.id);
 				if (response) return message.sendMessage(response) as Promise<AeliaMessage>;
 			}
 		}

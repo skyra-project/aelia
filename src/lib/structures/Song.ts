@@ -7,8 +7,10 @@ export class Song {
 
 	@enumerable(false)
 	public track: string;
+
 	@enumerable(false)
 	public requester: KlasaUser;
+
 	public identifier: string;
 	public seekable: boolean;
 	public author: string;

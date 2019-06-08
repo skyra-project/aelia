@@ -1,13 +1,12 @@
 import { CommandStore } from 'klasa';
-import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
 import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
-	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
-		super(client, store, file, directory, {
-			description: (language) => language.get('COMMAND_QUEUE_DESCRIPTION'),
+	public constructor(store: CommandStore, file: string[], directory: string) {
+		super(store, file, directory, {
+			description: language => language.get('COMMAND_QUEUE_DESCRIPTION'),
 			music: ['QUEUE_NOT_EMPTY']
 		});
 	}
@@ -16,7 +15,7 @@ export default class extends MusicCommand {
 		const { queue } = message.guild.music;
 		if (!queue.length) throw message.language.get('COMMAND_QUEUE_EMPTY');
 
-		const output = [];
+		const output: string[] = [];
 		for (let i = 0; i < Math.min(queue.length, 10); i++) {
 			const song = queue[i];
 			output[i] = [

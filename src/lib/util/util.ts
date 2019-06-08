@@ -34,9 +34,9 @@ export function enumerable(value: boolean): (target: any, propertyKey: string) =
 					configurable: true,
 					enumerable: value,
 					value: val,
-					writable: true,
+					writable: true
 				});
-			},
+			}
 		});
 	};
 }

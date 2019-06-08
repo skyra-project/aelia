@@ -1,23 +1,22 @@
 import { TextChannel } from 'discord.js';
 import { CommandStore, util } from 'klasa';
 import { Track } from 'lavalink';
-import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
 import { MusicManager } from '../../lib/structures/MusicManager';
 import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
-	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
-		super(client, store, file, directory, {
-			description: (language) => language.get('COMMAND_PLAY_DESCRIPTION'),
+	public constructor(store: CommandStore, file: string[], directory: string) {
+		super(store, file, directory, {
+			description: language => language.get('COMMAND_PLAY_DESCRIPTION'),
 			music: ['USER_VOICE_CHANNEL'],
 			usage: '(song:song)'
 		});
 
-		this.createCustomResolver('song', (arg, possible, message) => {
-			return arg ? this.client.arguments.get('song').run(arg, possible, message) : null;
-		});
+		this.createCustomResolver('song', (arg, possible, message) => arg
+			? this.client.arguments.get('song').run(arg, possible, message)
+			: null);
 	}
 
 	// @ts-ignore
@@ -45,14 +44,14 @@ export default class extends MusicCommand {
 			await message.sendLocale('COMMAND_PLAY_QUEUE_PAUSED', [music.queue[0].title]);
 		} else {
 			music.channel = message.channel as TextChannel;
-			this.play(music).catch((error) => this.client.emit('wtf', error));
+			this.play(music).catch(error => this.client.emit('wtf', error));
 		}
 	}
 
 	public async play(music: MusicManager): Promise<void> {
 		while (music.queue.length) {
 			const [song] = music.queue;
-			await music.channel.sendLocale('COMMAND_PLAY_NEXT', [song]);
+			await music.channel!.sendLocale('COMMAND_PLAY_NEXT', [song]);
 			await util.sleep(250);
 
 			try {
@@ -66,8 +65,9 @@ export default class extends MusicCommand {
 		}
 
 		if (!music.queue.length) {
-			await music.channel.sendLocale('COMMAND_PLAY_END');
-			await music.leave().catch((error) => { this.client.emit('wtf', error); });
+			await music.channel!.sendLocale('COMMAND_PLAY_END');
+			await music.leave()
+				.catch(error => { this.client.emit('wtf', error); });
 		}
 	}
 

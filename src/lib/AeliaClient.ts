@@ -1,5 +1,5 @@
 import { Colors, KlasaClient, KlasaClientOptions, util } from 'klasa';
-import { BaseNodeOptions, Node as Lavalink } from 'lavalink';
+import { Node as Lavalink } from 'lavalink';
 import { Node } from 'veza';
 import { IPCMonitorStore } from './structures/IPCMonitorStore';
 
@@ -12,44 +12,52 @@ const r = new Colors({ text: 'red' }).format('[IPC   ]');
 
 export class AeliaClient extends KlasaClient {
 
-	public options: Required<AeliaClientOptions>;
 	public ipcMonitors = new IPCMonitorStore(this);
 	public ipc = new Node('aelia-master')
-		.on('client.identify', (client) => { this.console.log(`${g} Client Connected: ${client.name}`); })
-		.on('client.disconnect', (client) => { this.console.log(`${y} Client Disconnected: ${client.name}`); })
-		.on('client.destroy', (client) => { this.console.log(`${y} Client Destroyed: ${client.name}`); })
-		.on('server.ready', (server) => { this.console.log(`${g} Client Ready: Named ${server.name}`); })
+		.on('client.identify', client => { this.console.log(`${g} Client Connected: ${client.name}`); })
+		.on('client.disconnect', client => { this.console.log(`${y} Client Disconnected: ${client.name}`); })
+		.on('client.destroy', client => { this.console.log(`${y} Client Destroyed: ${client.name}`); })
+		.on('server.ready', server => { this.console.log(`${g} Client Ready: Named ${server.name}`); })
 		.on('error', (error, client) => { this.console.error(`${r} Error from ${client.name}`, error); })
 		.on('message', this.ipcMonitors.run.bind(this.ipcMonitors));
+
 	public lavalink = new Lavalink({
-		send: async(guildID: string, packet: any) => {
+		send: async (guildID: string, packet: any) => {
 			const guild = this.guilds.get(guildID);
-			if (guild) this.ws.shards.get(guild.shardID).send(packet);
+			if (guild) this.ws.shards.get(guild.shardID)!.send(packet);
 			else throw new Error('attempted to send a packet on the wrong shard');
 		},
 		...this.options.lavalink
 	});
 
-	public constructor(options?: AeliaClientOptions) {
+	public constructor(options?: KlasaClientOptions) {
 		super(util.mergeDefault({ dev: false }, options));
 
 		this.registerStore(this.ipcMonitors);
 
 		this.once('klasaReady', () => {
-			if (this.options.dev) this.permissionLevels.add(0, (message) => message.author.id === this.options.ownerID, { break: true });
+			if (this.options.dev) this.permissionLevels.add(0, ({ author }) => this.options.owners.includes(author!.id), { 'break': true });
 		});
-		this.on('raw', (pk) => {
-			if (pk.t === 'VOICE_STATE_UPDATE') this.lavalink.voiceStateUpdate(pk.d).catch((error) => { this.emit('error', error); });
-			else if (pk.t === 'VOICE_SERVER_UPDATE') this.lavalink.voiceServerUpdate(pk.d).catch((error) => { this.emit('error', error); });
+		this.on('raw', (pk: { t: string; d: any }) => {
+			if (pk.t === 'VOICE_STATE_UPDATE') {
+				this.lavalink.voiceStateUpdate(pk.d)
+					.catch(error => { this.emit('error', error); });
+			} else if (pk.t === 'VOICE_SERVER_UPDATE') {
+				this.lavalink.voiceServerUpdate(pk.d)
+					.catch(error => { this.emit('error', error); });
+			}
 		});
 	}
 
 }
 
-/**
- * The client options for Aelia
- */
-export type AeliaClientOptions = KlasaClientOptions & {
-	dev?: boolean;
-	lavalink?: BaseNodeOptions;
-};
+AeliaClient.defaultClientSchema
+	.add('guildBlacklist', 'string', { array: true })
+	.add('guildWhitelist', 'string', { array: true })
+	.add('userBlacklist', 'user', { array: true })
+	.add('userWhitelist', 'user', { array: true })
+	.add('userAlertedList', 'user', { array: true });
+
+AeliaClient.defaultGuildSchema
+	.add('administrator', 'role')
+	.add('dj', 'role');

@@ -1,17 +1,16 @@
 import { Event, EventStore } from 'klasa';
-import { AeliaClient } from '../lib/AeliaClient';
 import { AeliaGuild } from '../lib/extensions/AeliaGuild';
 
 export default class extends Event {
 
-	public constructor(client: AeliaClient, store: EventStore, file: string[], directory: string) {
-		super(client, store, file, directory, {
-			emitter: client.lavalink,
+	public constructor(store: EventStore, file: string[], directory: string) {
+		super(store, file, directory, {
+			emitter: 'lavalink',
 			event: 'event'
 		});
 	}
 
-	public run(payload: any): void {
+	public run(payload: any) {
 		if (!payload.guildId) return;
 		try {
 			const guild = this.client.guilds.get(payload.guildId);

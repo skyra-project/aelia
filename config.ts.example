@@ -1,11 +1,11 @@
 // Remove `.example` from the file extension to configure Aelia
 
-import { AeliaClientOptions } from './src/lib/AeliaClient';
+import { KlasaClientOptions } from 'klasa';
 
 // eslint-disable-next-line no-process-env
 const DEV = 'DEV' in process.env ? process.env.DEV === 'true' : !('PM2_HOME' in process.env);
 
-export const CLIENT_OPTIONS: AeliaClientOptions = {
+export const CLIENT_OPTIONS: KlasaClientOptions = {
 	commandEditing: true,
 	commandMessageLifetime: 200,
 	console: { useColor: true, utc: true },
@@ -39,8 +39,8 @@ export const CLIENT_OPTIONS: AeliaClientOptions = {
 	},
 	prefix: DEV ? 'md.' : 'm.',
 	presence: { status: 'online', activity: { type: 'LISTENING', name: 'Aelia, help' } },
-	readyMessage: (client) =>
-		`Aelia 4.0.0 ready! [${client.user.tag}] [ ${client.guilds.size} [G]] [ ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()} [U]].`,
+	readyMessage: client =>
+		`Aelia 4.1.0 ready! [${client.user!.tag}] [ ${client.guilds.size} [G]] [ ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()} [U]].`,
 	regexPrefix: /aelia[,!]/i,
 	slowmode: 1000,
 	slowmodeAggressive: true,

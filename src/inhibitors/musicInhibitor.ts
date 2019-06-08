@@ -1,5 +1,4 @@
 import { Inhibitor, InhibitorStore } from 'klasa';
-import { AeliaClient } from '../lib/AeliaClient';
 import { MusicBitField } from '../lib/structures/MusicBitField';
 import { MusicCommand } from '../lib/structures/MusicCommand';
 import { AeliaMessage } from '../lib/types/Misc';
@@ -8,8 +7,8 @@ const { FLAGS } = MusicBitField;
 
 export default class extends Inhibitor {
 
-	public constructor(client: AeliaClient, store: InhibitorStore, file: string[], directory: string) {
-		super(client, store, file, directory, {
+	public constructor(store: InhibitorStore, file: string[], directory: string) {
+		super(store, file, directory, {
 			spamProtection: true
 		});
 	}
@@ -47,13 +46,13 @@ export default class extends Inhibitor {
 
 		const sameVoiceChannel = command.music.has(FLAGS.SAME_VOICE_CHANNEL);
 		if (sameVoiceChannel || command.music.has(FLAGS.USER_VOICE_CHANNEL)) {
-			if (!message.member.voice.channelID) throw message.language.get('INHIBITOR_MUSIC_USER_VOICE_CHANNEL');
+			if (!message.member!.voice.channelID) throw message.language.get('INHIBITOR_MUSIC_USER_VOICE_CHANNEL');
 		}
 		if (sameVoiceChannel || command.music.has(FLAGS.AELIA_VOICE_CHANNEL)) {
-			if (!message.guild.me.voice.channelID) throw message.language.get('INHIBITOR_MUSIC_BOT_VOICE_CHANNEL');
+			if (!message.guild.me!.voice.channelID) throw message.language.get('INHIBITOR_MUSIC_BOT_VOICE_CHANNEL');
 		}
 
-		if (sameVoiceChannel && message.member.voice.channelID !== message.guild.me.voice.channelID) {
+		if (sameVoiceChannel && message.member!.voice.channelID !== message.guild.me!.voice.channelID) {
 			throw message.language.get('INHIBITOR_MUSIC_BOTH_VOICE_CHANNEL');
 		}
 	}

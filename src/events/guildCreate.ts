@@ -6,7 +6,7 @@ const NOTICE = new Colors({ text: 'lightyellow' }).format('[GUILD JOIN]');
 
 export default class extends Event {
 
-	public async run(guild: AeliaGuild): Promise<void> {
+	public async run(guild: AeliaGuild) {
 		if (!guild.available) return null;
 
 		const leave = await this.shouldLeave(guild);
@@ -28,22 +28,22 @@ export default class extends Event {
 				`            : ${guild.name}`,
 				`COUNT       : ${guild.memberCount}`,
 				`OWNER       : ${guild.ownerID}`,
-				`            : ${guild.owner.user.username}`,
+				`            : ${guild.owner!.user.username}`,
 				`WHITELISTED : ${leave ? 'YES' : 'NO'}`
-			].join('\n')).catch((error) => { this.client.emit('wtf', error); });
+			].join('\n')).catch(error => { this.client.emit('wtf', error); });
 		}
 	}
 
 	public async shouldLeave(guild: AeliaGuild): Promise<boolean> {
 		// If the owner is Aelia's owner, do nothing
-		if (guild.ownerID === this.client.owner.id) return false;
+		if (this.client.options.owners.includes(guild.ownerID)) return false;
 
 		// Check whether the guild or the guild owner are whitelisted or blacklisted
 		const { settings } = this.client;
-		const guildBlacklist = settings.get('guildBlacklist') as Snowflake[];
-		const userBlacklist = settings.get('userBlacklist') as Snowflake[];
-		const guildWhitelist = settings.get('guildWhitelist') as Snowflake[];
-		const userWhitelist = settings.get('userWhitelist') as Snowflake[];
+		const guildBlacklist = settings!.get('guildBlacklist') as Snowflake[];
+		const userBlacklist = settings!.get('userBlacklist') as Snowflake[];
+		const guildWhitelist = settings!.get('guildWhitelist') as Snowflake[];
+		const userWhitelist = settings!.get('userWhitelist') as Snowflake[];
 
 		if (guildBlacklist.includes(guild.id)
 			|| userBlacklist.includes(guild.ownerID)) return true;
@@ -53,10 +53,10 @@ export default class extends Event {
 		const member = await guild.members.fetch(guild.ownerID).catch(() => null);
 		if (!member) return true;
 
-		const userAlertedList = settings.get('userAlertedList') as Snowflake[];
+		const userAlertedList = settings!.get('userAlertedList') as Snowflake[];
 
 		if (!userAlertedList.includes(member.id)) {
-			await settings.update('userAlertedList', member.user);
+			await settings!.update('userAlertedList', member.user);
 			// Send notice to the owner
 			await member.user.send([
 				`Hello ${member.user.username}! I am glad you want me in your server, however, my services are not free.`,

@@ -1,13 +1,12 @@
 import { MessageOptions, TextChannel } from 'discord.js';
 import { CommandStore } from 'klasa';
-import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
 import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
-	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
-		super(client, store, file, directory, {
+	public constructor(store: CommandStore, file: string[], directory: string) {
+		super(store, file, directory, {
 			aliases: ['talk'],
 			description: 'Make Aelia talk in another channel.',
 			permissionLevel: 10,
@@ -19,7 +18,7 @@ export default class extends MusicCommand {
 	public async run(message: AeliaMessage, [channel = message.channel as TextChannel, content]: [TextChannel, string]): Promise<AeliaMessage> {
 		if (message.deletable) message.delete().catch(() => null);
 
-		const attachment = message.attachments.size > 0 ? message.attachments.first().url : null;
+		const attachment = message.attachments.size > 0 ? message.attachments.first()!.url : null;
 		if (content.length === 0 && !attachment) throw 'I have no content nor attachment to send, please write something.';
 
 		const options: MessageOptions = {};

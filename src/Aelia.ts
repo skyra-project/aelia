@@ -15,15 +15,16 @@ AeliaClient.defaultGuildSchema
 
 // Modify the permission levels
 AeliaClient.defaultPermissionLevels
-	.add(5, (message) => message.member && message.guild.settings.get('dj') && message.member.roles.has(message.guild.settings.get('dj') as string), { fetch: true })
-	.add(6, (message) => message.member
-		&& ((message.guild.settings.get('administrator') && message.member.roles.has(message.guild.settings.get('administrator') as string))
-			|| message.member.permissions.has('MANAGE_GUILD')), { fetch: true });
+	.add(5, ({ member, guild }) => Boolean(member && guild!.settings.get('dj') && member.roles.has(guild!.settings.get('dj') as string)), { fetch: true })
+	.add(6, ({ member, guild }) => member!
+		&& ((guild!.settings.get('administrator') && member!.roles.has(guild!.settings.get('administrator') as string))
+			|| member!.permissions.has('MANAGE_GUILD')), { fetch: true });
 
 const client = new AeliaClient(CLIENT_OPTIONS);
-client.login(TOKEN).catch((error) => { client.console.error(error); });
+client.login(TOKEN)
+	.catch(error => { client.console.error(error); });
 
 if (!CLIENT_OPTIONS.dev) {
 	client.ipc.connectTo('ny-api', 9997)
-		.catch((error) => { client.console.error(error); });
+		.catch(error => { client.console.error(error); });
 }

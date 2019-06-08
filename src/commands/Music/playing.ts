@@ -1,15 +1,14 @@
 import { MessageEmbed } from 'discord.js';
 import { CommandStore } from 'klasa';
-import { AeliaClient } from '../../lib/AeliaClient';
 import { MusicCommand } from '../../lib/structures/MusicCommand';
 import { AeliaMessage } from '../../lib/types/Misc';
 
 export default class extends MusicCommand {
 
-	public constructor(client: AeliaClient, store: CommandStore, file: string[], directory: string) {
-		super(client, store, file, directory, {
+	public constructor(store: CommandStore, file: string[], directory: string) {
+		super(store, file, directory, {
 			aliases: ['np', 'nowplaying'],
-			description: (language) => language.get('COMMAND_PLAYING_DESCRIPTION'),
+			description: language => language.get('COMMAND_PLAYING_DESCRIPTION'),
 			music: ['QUEUE_NOT_EMPTY', 'VOICE_PLAYING']
 		});
 	}
