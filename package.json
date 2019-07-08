@@ -42,7 +42,7 @@
     "discord.js": "github:discordjs/discord.js",
     "fs-nextra": "^0.4.5",
     "klasa": "github:dirigeants/klasa#settings",
-    "lavalink": "^2.6.1",
+    "lavalink": "^2.8.1",
     "node-fetch": "^2.6.0",
     "typescript": "^3.5.2",
     "veza": "^0.5.1"
