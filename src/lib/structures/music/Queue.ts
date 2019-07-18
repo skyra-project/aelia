@@ -217,7 +217,6 @@ export class Queue extends Array<Song> {
 		if (isTrackStuckEvent(payload)) {
 			if (this.channel && payload.thresholdMs > 1000) {
 				(this.channel.sendLocale('MUSICMANAGER_STUCK', [Math.ceil(payload.thresholdMs / 1000)]) as Promise<KlasaMessage>)
-					// eslint-disable-next-line promise/prefer-await-to-then
 					.then((message: KlasaMessage) => message.delete({ timeout: payload.thresholdMs }))
 					.catch(error => { this.client.emit('wtf', error); });
 			}
@@ -229,7 +228,6 @@ export class Queue extends Array<Song> {
 			if (payload.code >= 4000) {
 				this.client.emit('error', `[LL:${this.guild.id}] Disconnection with code ${payload.code}: ${payload.reason}`);
 				(this.channel!.sendLocale('MUSICMANAGER_CLOSE') as Promise<KlasaMessage>)
-					// eslint-disable-next-line promise/prefer-await-to-then
 					.then((message: KlasaMessage) => message.delete({ timeout: 10000 }))
 					.catch(error => { this.client.emit('wtf', error); });
 			}
