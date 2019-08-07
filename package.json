@@ -45,7 +45,7 @@
     "lavalink": "^2.8.1",
     "node-fetch": "^2.6.0",
     "typescript": "^3.5.3",
-    "veza": "^0.6.0"
+    "veza": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^12.6.9",
