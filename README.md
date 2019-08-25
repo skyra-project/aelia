@@ -12,9 +12,11 @@ a much better queue manager.
 
 - [`Node.js`]: To run the project.
 - [`Lavalink`]: Audio server.
+- [`Ny-API`]: (Dev Optional) Central server.
 
 [`Node.js`]: https://nodejs.org/en/download/current/
 [`Lavalink`]: https://github.com/Frederikam/Lavalink
+[`Ny-API`]: https://github.com/kyranet/Ny-API
 
 ## Set-Up
 
