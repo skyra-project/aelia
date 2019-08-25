@@ -27,11 +27,11 @@ Once all development requirements are set up:
 # Lints and format all the code:
 $ yarn lint
 
-# Run Skyra in development mode, only requires
+# Run Aelia in development mode, only requires
 # Lavalink to be running:
 $ yarn start
 
-# Run Skyra in production mode, requires
+# Run Aelia in production mode, requires
 # Lavalink and Ny-API to be running:
 $ yarn pm2:start
 ```
