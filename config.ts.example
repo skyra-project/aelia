@@ -3,7 +3,8 @@
 import { KlasaClientOptions } from 'klasa';
 
 // eslint-disable-next-line no-process-env
-const DEV = 'DEV' in process.env ? process.env.DEV === 'true' : !('PM2_HOME' in process.env);
+export const DEV = 'DEV' in process.env ? process.env.DEV === 'true' : !('PM2_HOME' in process.env);
+export const EVLYN_PORT = 3100;
 
 export const CLIENT_OPTIONS: KlasaClientOptions = {
 	commandEditing: true,

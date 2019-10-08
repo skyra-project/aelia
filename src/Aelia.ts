@@ -1,5 +1,5 @@
 import { inspect } from 'util';
-import { CLIENT_OPTIONS, TOKEN } from '../config';
+import { CLIENT_OPTIONS, TOKEN, EVLYN_PORT } from '../config';
 import { AeliaClient } from './lib/AeliaClient';
 inspect.defaultOptions.depth = 1;
 
@@ -25,6 +25,6 @@ client.login(TOKEN)
 	.catch(error => { client.console.error(error); });
 
 if (!CLIENT_OPTIONS.dev) {
-	client.ipc.connectTo(9997)
+	client.ipc.connectTo(EVLYN_PORT)
 		.catch(error => { client.console.error(error); });
 }
