@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "discord.js": "github:discordjs/discord.js",
-    "fs-nextra": "^0.4.7",
+    "fs-nextra": "^0.5.1",
     "klasa": "github:dirigeants/klasa#settings",
     "lavalink": "^2.8.2",
     "node-fetch": "^2.6.0",
