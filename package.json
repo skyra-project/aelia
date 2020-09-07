@@ -43,7 +43,7 @@
     "fs-nextra": "^0.4.7",
     "klasa": "github:dirigeants/klasa#settings",
     "lavalink": "^2.8.2",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "typescript": "^3.7.4",
     "veza": "^1.1.0"
   },
