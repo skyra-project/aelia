@@ -1,6 +1,11 @@
 {
-	"extends": "bamboo",
+	"extends": "@skyra",
 	"rules": {
-		"no-throw-literal": 0
+		"@typescript-eslint/require-await": 0,
+		"@typescript-eslint/init-declarations": 0,
+		"@typescript-eslint/no-base-to-string": 0,
+		"@typescript-eslint/no-throw-literal": 0,
+		"@typescript-eslint/naming-convention": 0,
+		"@typescript-eslint/ban-ts-comment": 0
 	}
 }
