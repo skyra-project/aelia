@@ -1,8 +1,5 @@
 # Aelia [![Discord](https://discordapp.com/api/guilds/254360814063058944/embed.png)](https://skyra.pw/join)
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/kyranet/Aelia.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kyranet/Aelia/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/kyranet/Aelia.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/kyranet/Aelia/context:javascript)
-
 Aelia is a music bot (yeah, another bot in this world) built on top of [Klasa](https://github.com/dirigeants/klasa/),
 and uses [Discord.js](https://github.com/discordjs/discord.js) to connect to the Discord API.
 
